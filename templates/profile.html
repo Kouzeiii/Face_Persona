@@ -1,0 +1,521 @@
+{% extends "base.html" %}
+{% block title %}{{ data.name }} — FacePersona{% endblock %}
+
+{% block content %}
+<div class="page-hero-sm profile-dossier-hero">
+    <div class="page-hero-row">
+        <div class="profile-header-main">
+            <a href="{{ url_for('subjects') }}" class="back-link">
+                <span class="back-arrow">←</span>
+                <span>Back to Subjects Directory</span>
+            </a>
+            <div class="profile-identity-block">
+                <div class="profile-avatar-dossier" aria-hidden="true">{{ data.name[0] }}</div>
+                <div>
+                    <h1 class="page-title">{{ data.name }}</h1>
+                    <div class="profile-meta-row">
+                        <span class="meta-tag tag-profession">{{ data.profession_label or 'Public Figure' }}</span>
+                        {% if data.is_research %}
+                        <span class="meta-tag tag-research">🔒 Research Baseline</span>
+                        {% else %}
+                        <span class="meta-tag tag-public">✓ Public Demonstration</span>
+                        {% endif %}
+                        <span class="meta-tag tag-vector">512-D HOG Extracted</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="page-hero-actions">
+            <a href="{{ url_for('analyze') }}" class="btn btn-primary btn-glow">+ New Analysis</a>
+        </div>
+    </div>
+</div>
+
+{% set scores = data.biography_scores %}
+{% set predicted = data.estimated_scores %}
+{% set emb = data.embedding_info %}
+
+<!-- OCEAN Summary -->
+<div class="ocean-banner">
+    {% for trait in ['openness','conscientiousness','extraversion','agreeableness','neuroticism'] %}
+    {% set letter = ocean_letters[trait] %}
+    {% set score = scores[trait] %}
+    <div class="ocean-big-pill" style="--c: {{ ocean_colors[trait] }}">
+        <span class="big-letter">{{ letter }}</span>
+        <span class="big-score">{{ score|round|int }}</span>
+        <span class="big-label">{{ trait_labels[trait] }}</span>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Total OCEAN Score Summary -->
+{% set trait_list = ['openness','conscientiousness','extraversion','agreeableness','neuroticism'] %}
+{% set total = scores['openness'] + scores['conscientiousness'] + scores['extraversion'] + scores['agreeableness'] + scores['neuroticism'] %}
+{% set average = (total / 5)|round|int %}
+
+{# Find dominant trait #}
+{% set dominant = 'openness' %}
+{% for trait in trait_list %}
+    {% if scores[trait] > scores[dominant] %}
+        {% set dominant = trait %}
+    {% endif %}
+{% endfor %}
+
+{# Overall level #}
+{% if average >= 71 %}{% set overall_level = 'High' %}{% set overall_color = '#6FAD6F' %}
+{% elif average >= 41 %}{% set overall_level = 'Moderate' %}{% set overall_color = '#C49A4A' %}
+{% else %}{% set overall_level = 'Low' %}{% set overall_color = '#E07C6F' %}{% endif %}
+
+<div class="ocean-total-bar">
+    <div class="total-item">
+        <span class="total-label">Total Score</span>
+        <span class="total-value">{{ total|round|int }} <span class="total-outof">/ 500</span></span>
+    </div>
+    <div class="total-divider"></div>
+    <div class="total-item">
+        <span class="total-label">Average</span>
+        <span class="total-value">{{ average }} <span class="total-outof">/ 100</span></span>
+    </div>
+    <div class="total-divider"></div>
+    <div class="total-item">
+        <span class="total-label">Overall Level</span>
+        <span class="total-value" style="color:{{ overall_color }}">{{ overall_level }}</span>
+    </div>
+    <div class="total-divider"></div>
+    <div class="total-item">
+        <span class="total-label">Dominant Trait</span>
+        <span class="total-value" style="color:{{ ocean_colors[dominant] }}">{{ trait_labels[dominant] }} · {{ scores[dominant]|round|int }}</span>
+    </div>
+</div>
+
+<div class="profile-grid">
+    <!-- Biography Scores -->
+    <div class="profile-card">
+        <div class="card-header">
+            <div class="card-title">Biography Analysis</div>
+            <div class="card-tag">via Claude AI</div>
+        </div>
+        {% if data.reasoning %}
+        <p class="reasoning-text">{{ data.reasoning }}</p>
+        {% endif %}
+        <div class="traits-list">
+            {% for trait in ['openness','conscientiousness','extraversion','agreeableness','neuroticism'] %}
+            {% set val = scores[trait]|round|int %}
+            {% if val >= 71 %}{% set level = 'High' %}{% set level_color = '#6FAD6F' %}
+            {% elif val >= 41 %}{% set level = 'Moderate' %}{% set level_color = '#C49A4A' %}
+            {% else %}{% set level = 'Low' %}{% set level_color = '#E07C6F' %}{% endif %}
+            <div class="trait-row">
+                <div class="trait-meta">
+                    <span class="trait-name">{{ trait_labels[trait] }}</span>
+                    <span class="trait-desc">{{ trait_descriptions[trait] }}</span>
+                </div>
+                <div class="trait-bar-wrap">
+                    <div class="trait-bar" style="--w:{{ val }}%;--c:{{ ocean_colors[trait] }}"></div>
+                </div>
+                <div class="trait-val" style="color:{{ ocean_colors[trait] }}">{{ val }}</div>
+                <span class="level-pill" style="background:{{ level_color }}20;color:{{ level_color }};border:1px solid {{ level_color }}40">{{ level }}</span>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Collapsible Legend -->
+        <div class="legend-wrap">
+            <button class="legend-toggle" onclick="this.nextElementSibling.classList.toggle('hidden')">
+                ⓘ Score Criteria Guide
+            </button>
+            <div class="legend-body hidden">
+                <div class="legend-row"><span class="legend-dot" style="background:#6FAD6F"></span><strong>High (71–100)</strong> — Trait is strongly present and likely dominant in behavior.</div>
+                <div class="legend-row"><span class="legend-dot" style="background:#C49A4A"></span><strong>Moderate (41–70)</strong> — Trait is present but balanced with other traits.</div>
+                <div class="legend-row"><span class="legend-dot" style="background:#E07C6F"></span><strong>Low (0–40)</strong> — Trait is less prominent in the subject's personality profile.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ML Estimation -->
+    <div class="profile-card">
+        <div class="card-header">
+            <div class="card-title">ML Face Estimation</div>
+            <div class="card-tag {% if predicted %}green{% else %}amber{% endif %}">
+                {% if predicted %}via Random Forest{% else %}No model yet{% endif %}
+            </div>
+        </div>
+        {% if predicted %}
+        {% if model_is_outdated %}
+        <div class="alert alert-amber" style="margin-bottom: 1rem; padding: 0.6rem 0.8rem; font-size: 0.85rem;">
+            <div class="alert-icon">⚠</div>
+            <div class="alert-body">
+                <strong>Notice:</strong> Machine learning predictions reflect the model prior to recent subject deletion. Retraining is recommended.
+            </div>
+        </div>
+        {% endif %}
+        <p class="reasoning-text">Estimated by the ML model using facial embeddings — based on patterns learned from all subjects in the dataset.</p>
+        <div class="traits-list">
+            {% for trait in ['openness','conscientiousness','extraversion','agreeableness','neuroticism'] %}
+            {% set bio_val = scores[trait] %}
+            {% set pred_val = predicted[trait] %}
+            {% set diff = (pred_val - bio_val)|abs|round|int %}
+            <div class="trait-row">
+                <div class="trait-meta">
+                    <span class="trait-name">{{ trait_labels[trait] }}</span>
+                    <span class="trait-desc">Bio: {{ bio_val|round|int }} · Predicted: {{ pred_val|round|int }} · Diff: ±{{ diff }}</span>
+                </div>
+                <div class="trait-bar-wrap">
+                    <div class="trait-bar" style="--w:{{ pred_val }}%;--c:{{ ocean_colors[trait] }}"></div>
+                </div>
+                <div class="trait-val" style="color:{{ ocean_colors[trait] }}">{{ pred_val|round|int }}</div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state-sm">
+            <p>No ML estimation available. Train the model from the Dashboard after adding more subjects.</p>
+            <a href="{{ url_for('index') }}" class="btn btn-ghost btn-sm">Go to Dashboard</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Cross-Modal Trait Consistency Section -->
+{% if predicted %}
+<div class="section-header" style="margin-top:2.5rem">
+    <h2 class="section-title">Trait Consistency Check</h2>
+    <span class="section-hint">This compares the OCEAN scores derived from the biography with the pattern detected by the ML model from the facial embeddings. This is an exploratory comparison — not a claim that facial features determine personality.</span>
+</div>
+
+{% set traits = ['openness','conscientiousness','extraversion','agreeableness','neuroticism'] %}
+{% set total_diff = namespace(val=0) %}
+{% for trait in traits %}
+    {% set total_diff.val = total_diff.val + (scores[trait] - predicted[trait])|abs %}
+{% endfor %}
+{% set avg_diff = total_diff.val / 5 %}
+{% set align_pct = [0, (100 - avg_diff)|round|int]|max %}
+
+<div class="corr-summary">
+    <div class="corr-summary-score" style="color:
+        {% if align_pct >= 80 %}#6FAD6F
+        {% elif align_pct >= 60 %}#5BA89E
+        {% elif align_pct >= 40 %}#C49A4A
+        {% else %}#E07C6F{% endif %}">{{ align_pct }}%</div>
+    <div class="corr-summary-label" style="color:
+        {% if align_pct >= 80 %}#6FAD6F
+        {% elif align_pct >= 60 %}#5BA89E
+        {% elif align_pct >= 40 %}#C49A4A
+        {% else %}#E07C6F{% endif %}">
+        {% if align_pct >= 80 %}High Consistency
+        {% elif align_pct >= 60 %}Moderate Consistency
+        {% elif align_pct >= 40 %}Low Consistency
+        {% else %}Inconsistent{% endif %}
+    </div>
+    <div class="corr-summary-note">Overall consistency between biography-derived scores and ML-detected facial patterns</div>
+</div>
+
+{% for trait in traits %}
+{% set bio = scores[trait]|round|int %}
+{% set face = predicted[trait]|round|int %}
+{% set diff = (bio - face)|abs %}
+<div class="corr-row">
+    <div class="corr-trait-name" style="color:{{ ocean_colors[trait] }}">{{ trait_labels[trait] }}</div>
+    <div class="corr-bars">
+        <div class="corr-bar-wrap">
+            <div class="corr-bar-label">Biography</div>
+            <div class="corr-bar-track">
+                <div class="corr-bar-fill" style="width:{{ bio }}%;background:{{ ocean_colors[trait] }};opacity:1"></div>
+            </div>
+            <div class="corr-bar-val">{{ bio }}</div>
+        </div>
+        <div class="corr-bar-wrap">
+            <div class="corr-bar-label">ML Pattern</div>
+            <div class="corr-bar-track">
+                <div class="corr-bar-fill" style="width:{{ face }}%;background:{{ ocean_colors[trait] }};opacity:0.45"></div>
+            </div>
+            <div class="corr-bar-val">{{ face }}</div>
+        </div>
+    </div>
+    <div class="corr-diff-wrap">
+        <span class="corr-diff-label">Δ {{ diff }} pts</span>
+        <span class="corr-align" style="color:
+            {% if diff <= 10 %}#6FAD6F
+            {% elif diff <= 20 %}#5BA89E
+            {% elif diff <= 35 %}#C49A4A
+            {% else %}#E07C6F{% endif %}">
+            {% if diff <= 10 %}Consistent
+            {% elif diff <= 20 %}Moderate
+            {% elif diff <= 35 %}Low
+            {% else %}Inconsistent{% endif %}
+        </span>
+    </div>
+</div>
+{% endfor %}
+
+<div class="corr-note">
+    <strong>Note:</strong> "Biography" scores come from Claude AI's analysis of the subject's written biography. "ML Pattern" scores come from patterns the model detected in the facial embeddings across all subjects. A smaller Δ means both sources point to a similar trait level — a larger Δ simply means they differ, which is expected given the exploratory nature of this system.
+</div>
+{% endif %}
+
+<!-- Societal Impact Section -->
+{% if societal_impact %}
+<div class="section-header" style="margin-top:2.5rem">
+    <h2 class="section-title">Personality & Societal Relevance</h2>
+    <span class="section-hint">Based on the OCEAN scores, this explores how this type of personality profile may relate to real-world influence and societal impact — for context and academic discussion only.</span>
+</div>
+<div class="impact-card">
+    <div class="impact-header">
+        <div class="impact-icon">🌐</div>
+        <div>
+            <div class="impact-name">{{ data.name }}</div>
+            <div class="impact-profession">{{ data.profession_label or 'Public Figure' }}</div>
+        </div>
+        <div class="impact-tag">via Claude AI</div>
+    </div>
+    <div class="impact-dominant-traits">
+        {% for trait in ['openness','conscientiousness','extraversion','agreeableness','neuroticism'] %}
+        {% set val = scores[trait]|round|int %}
+        {% if val >= 70 %}
+        <span class="impact-trait-pill" style="background:{{ ocean_colors[trait] }}20;color:{{ ocean_colors[trait] }};border:1px solid {{ ocean_colors[trait] }}40">
+            {{ trait_labels[trait] }} · {{ val }}
+        </span>
+        {% endif %}
+        {% endfor %}
+    </div>
+    <div class="impact-body">
+        {% for para in societal_impact.split('\n\n') %}
+        <p class="impact-paragraph">{{ para }}</p>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+{% if emb %}
+<div class="section-header" style="margin-top: 2.5rem;">
+    <h2 class="section-title">How the Face Was Converted to Numbers</h2>
+    <span class="section-hint">Step-by-step HOG facial embedding process</span>
+</div>
+
+<!-- Step indicators -->
+<div class="viz-steps">
+    <button class="viz-step-btn active" onclick="showVizStep(1)" id="stepBtn1">
+        <span class="viz-step-num">1</span>
+        <span class="viz-step-label">Face Detection</span>
+    </button>
+    <div class="viz-step-arrow">→</div>
+    <button class="viz-step-btn" onclick="showVizStep(2)" id="stepBtn2">
+        <span class="viz-step-num">2</span>
+        <span class="viz-step-label">Grid Division</span>
+    </button>
+    <div class="viz-step-arrow">→</div>
+    <button class="viz-step-btn" onclick="showVizStep(3)" id="stepBtn3">
+        <span class="viz-step-num">3</span>
+        <span class="viz-step-label">Gradient Directions</span>
+    </button>
+    <div class="viz-step-arrow">→</div>
+    <button class="viz-step-btn" onclick="showVizStep(4)" id="stepBtn4">
+        <span class="viz-step-num">4</span>
+        <span class="viz-step-label">512-dim Vector</span>
+    </button>
+</div>
+
+<!-- Step 1: Face Detection -->
+<div class="viz-panel" id="vizStep1" style="display:block">
+    <div class="viz-panel-inner">
+        <div class="viz-html-visual" id="faceViz">
+            <div class="face-detect-bg">
+                <div class="face-silhouette">
+                    <div class="face-head">
+                        {% if emb.face_detected %}
+                        <div class="face-bbox">
+                            <div class="bbox-corner tl"></div>
+                            <div class="bbox-corner tr"></div>
+                            <div class="bbox-corner bl"></div>
+                            <div class="bbox-corner br"></div>
+                            <div class="bbox-label">✓ Face Detected</div>
+                            <div class="bbox-center-dot"></div>
+                        </div>
+                        {% else %}
+                        <div class="no-face-label">⚠ No face detected</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="viz-explain">
+            <div class="viz-explain-title">Step 1 — Face Detection</div>
+            <div class="viz-explain-text">
+                OpenCV's Haar Cascade Classifier scans the image to locate the face. A bounding box is drawn around the detected face region, which is then cropped and resized to <strong>128×128 pixels</strong> for consistent processing.
+            </div>
+            <div class="viz-stats">
+                <div class="viz-stat">
+                    <span class="viz-stat-label">Face Detected</span>
+                    <span class="viz-stat-val {% if emb.face_detected %}ok{% else %}warn{% endif %}">
+                        {% if emb.face_detected %}✓ Yes{% else %}⚠ No (full image used){% endif %}
+                    </span>
+                </div>
+                {% if emb.face_box %}
+                <div class="viz-stat">
+                    <span class="viz-stat-label">Face Size</span>
+                    <span class="viz-stat-val">{{ emb.face_box.w }} × {{ emb.face_box.h }} px</span>
+                </div>
+                <div class="viz-stat">
+                    <span class="viz-stat-label">Image Size</span>
+                    <span class="viz-stat-val">{{ emb.face_box.img_w }} × {{ emb.face_box.img_h }} px</span>
+                </div>
+                {% endif %}
+                <div class="viz-stat">
+                    <span class="viz-stat-label">Resized to</span>
+                    <span class="viz-stat-val">128 × 128 px</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Step 2: Grid Division -->
+<div class="viz-panel" id="vizStep2" style="display:none">
+    <div class="viz-panel-inner">
+        <div class="viz-html-visual">
+            <div class="grid-viz">
+                {% for row in range(8) %}
+                <div class="grid-row">
+                    {% for col in range(8) %}
+                    {% if emb.cell_grid and emb.cell_grid[row] and emb.cell_grid[row][col] %}
+                    {% set mag = emb.cell_grid[row][col].magnitude %}
+                    {% set alpha = [0.15 + mag * 4, 0.95]|min %}
+                    <div class="grid-cell" style="opacity: {{ alpha }};" title="Cell ({{ row }},{{ col }}) mag={{ mag }}">
+                        <span class="grid-cell-num">{{ row * 8 + col + 1 }}</span>
+                    </div>
+                    {% else %}
+                    <div class="grid-cell"><span class="grid-cell-num">{{ row * 8 + col + 1 }}</span></div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+                {% endfor %}
+                <div class="grid-label">8×8 preview of 16×16 cell grid</div>
+            </div>
+        </div>
+        <div class="viz-explain">
+            <div class="viz-explain-title">Step 2 — Grid Division</div>
+            <div class="viz-explain-text">
+                The 128×128 face image is divided into a <strong>16×16 grid of cells</strong> (8px each). Each cell independently measures gradient directions — this is why it's <strong>non-linear</strong>: different regions (eyes, nose, mouth, jawline) contribute separate measurements. Darker cells have stronger gradients.
+            </div>
+            <div class="viz-stats">
+                <div class="viz-stat"><span class="viz-stat-label">Grid Size</span><span class="viz-stat-val">16 × 16 cells</span></div>
+                <div class="viz-stat"><span class="viz-stat-label">Cell Size</span><span class="viz-stat-val">8 × 8 pixels each</span></div>
+                <div class="viz-stat"><span class="viz-stat-label">Total Cells</span><span class="viz-stat-val">256 cells</span></div>
+                <div class="viz-stat"><span class="viz-stat-label">Values per cell</span><span class="viz-stat-val">9 gradient bins</span></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Step 3: Gradient Directions -->
+<div class="viz-panel" id="vizStep3" style="display:none">
+    <div class="viz-panel-inner">
+        <div class="viz-html-visual">
+            <div class="hog-viz">
+                {% for row in range(8) %}
+                <div class="hog-row">
+                    {% for col in range(8) %}
+                    {% if emb.cell_grid and emb.cell_grid[row] and emb.cell_grid[row][col] %}
+                    {% set cell = emb.cell_grid[row][col] %}
+                    {% set dom = cell.dominant %}
+                    {% set angles = [0, 20, 40, 60, 80, 100, 120, 140, 160] %}
+                    {% set angle = angles[dom] %}
+                    {% set mag = [cell.magnitude * 6, 1.0]|min %}
+                    <div class="hog-cell" title="{{ angle }}° dominant">
+                        <div class="hog-line" style="transform: rotate({{ angle }}deg); opacity: {{ [0.3 + mag, 1.0]|min }};"></div>
+                    </div>
+                    {% else %}
+                    <div class="hog-cell"></div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+                {% endfor %}
+                <div class="grid-label" style="color:#A89EF0">Each line = dominant gradient direction per cell</div>
+            </div>
+        </div>
+        <div class="viz-explain">
+            <div class="viz-explain-title">Step 3 — Gradient Directions (HOG)</div>
+            <div class="viz-explain-text">
+                For each cell, the Histogram of Oriented Gradients (HOG) measures edge directions in <strong>9 orientations</strong> (0° to 160°). Each line shows the dominant gradient direction and strength. This captures facial features like edges of eyes, nose bridges, and lips as numerical values.
+            </div>
+            <div class="viz-stats">
+                <div class="viz-stat"><span class="viz-stat-label">Orientations</span><span class="viz-stat-val">9 bins (0°–160°)</span></div>
+                <div class="viz-stat"><span class="viz-stat-label">Values per cell</span><span class="viz-stat-val">9 gradient values</span></div>
+                <div class="viz-stat"><span class="viz-stat-label">Non-zero dims</span><span class="viz-stat-val">{{ emb.stats.nonzero if emb.stats else 512 }} / 512</span></div>
+                <div class="viz-stat"><span class="viz-stat-label">Total values</span><span class="viz-stat-val">256 cells × 9 bins = 2,304 → trimmed to 512</span></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Step 4: 512-dim Vector -->
+<div class="viz-panel" id="vizStep4" style="display:none">
+    <div class="viz-panel-inner">
+        <div class="viz-explain" style="flex:1">
+            <div class="viz-explain-title">Step 4 — 512-Dimensional Vector</div>
+            <div class="viz-explain-text">
+                All gradient values are flattened into a <strong>512-dimensional numerical vector</strong> and L2-normalized. This vector is the face's unique "numerical fingerprint" — fed into the ML pipeline below.
+            </div>
+            <div class="pipeline-viz">
+                <div class="pipe-stage" style="--c:#7C6FE0">
+                    <div class="pipe-icon">🖼</div>
+                    <div class="pipe-label">Face Image<br><small>128×128px</small></div>
+                </div>
+                <div class="pipe-arrow">→</div>
+                <div class="pipe-stage" style="--c:#5BA89E">
+                    <div class="pipe-icon">⚖</div>
+                    <div class="pipe-label">StandardScaler<br><small>normalize</small></div>
+                </div>
+                <div class="pipe-arrow">→</div>
+                <div class="pipe-stage" style="--c:#E07C6F">
+                    <div class="pipe-icon">📉</div>
+                    <div class="pipe-label">PCA<br><small>512→25 dims</small></div>
+                </div>
+                <div class="pipe-arrow">→</div>
+                <div class="pipe-stage" style="--c:#6FAD6F">
+                    <div class="pipe-icon">🌲</div>
+                    <div class="pipe-label">Random Forest<br><small>estimate OCEAN</small></div>
+                </div>
+            </div>
+            <div class="viz-stats" style="margin-top:1rem">
+                <div class="viz-stat"><span class="viz-stat-label">Vector length</span><span class="viz-stat-val">512 dimensions</span></div>
+                <div class="viz-stat"><span class="viz-stat-label">Min value</span><span class="viz-stat-val">{{ emb.stats.min if emb.stats else '0.000' }}</span></div>
+                <div class="viz-stat"><span class="viz-stat-label">Max value</span><span class="viz-stat-val">{{ emb.stats.max if emb.stats else '1.000' }}</span></div>
+                <div class="viz-stat"><span class="viz-stat-label">Mean</span><span class="viz-stat-val">{{ emb.stats.mean if emb.stats else '0.000' }}</span></div>
+            </div>
+        </div>
+    </div>
+    <!-- Vector bar chart -->
+    <div class="vector-full-wrap" style="margin-top:1rem">
+        <div class="vector-bars">
+            {% for val in (emb.top50_values if emb.top50_values else []) %}
+            {% set h = ([val * 400, 60]|min)|int %}
+            {% set h = [h, 2]|max %}
+            {% set hue = (loop.index0 / 50 * 280)|int %}
+            <div class="vbar-wrap">
+                <div class="vbar" style="height:{{ h }}px; background: hsl({{ hue }}, 70%, 60%);"></div>
+                {% if loop.index == 1 or loop.index == 10 or loop.index == 25 or loop.index == 50 %}
+                <div class="vbar-label">{{ loop.index }}</div>
+                {% else %}
+                <div class="vbar-label"></div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        <p class="emb-note">First 50 of 512 embedding dimensions — each bar represents a gradient intensity value extracted from {{ data.name }}'s face.</p>
+    </div>
+</div>
+
+<script>
+function showVizStep(step) {
+    for(let i = 1; i <= 4; i++) {
+        const panel = document.getElementById('vizStep' + i);
+        const btn = document.getElementById('stepBtn' + i);
+        if(panel) panel.style.display = (i === step) ? 'block' : 'none';
+        if(btn) btn.classList.toggle('active', i === step);
+    }
+}
+</script>
+{% endif %}
+
+<div id="toast" class="toast hidden"></div>
+{% endblock %}

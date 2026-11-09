@@ -1,0 +1,1081 @@
+{
+  "name": "Billie Eilish",
+  "biography_scores": {
+    "openness": 92.0,
+    "conscientiousness": 78.0,
+    "extraversion": 45.0,
+    "agreeableness": 70.0,
+    "neuroticism": 65.0
+  },
+  "estimated_scores": {
+    "openness": 80.9,
+    "conscientiousness": 83.8,
+    "extraversion": 64.5,
+    "agreeableness": 65.2,
+    "neuroticism": 51.6
+  },
+  "reasoning": "Billie Eilish demonstrates exceptionally high openness through her unconventional artistic approach, unique sonic experimentation, and willingness to challenge musical norms. Her conscientiousness is evidenced by consistent professional achievement and prolific output, though her artistic style suggests flexibility over rigidity. Her extraversion appears moderate-to-low given her introspective musical themes and authentic, non-performative public persona, while her advocacy work and collaborative success indicate solid agreeableness. Neuroticism is elevated based on the emotional depth and vulnerability present in her artistic expression, common among highly creative individuals.",
+  "embedding_info": {
+    "face_detected": true,
+    "face_box": {
+      "x": 311,
+      "y": 886,
+      "w": 58,
+      "h": 58,
+      "img_w": 779,
+      "img_h": 1039
+    },
+    "embedding_dim": 512,
+    "norm_before": 3.7547552585601807,
+    "top10_values": [
+      0.079767,
+      0.079767,
+      0.079767,
+      0.004617,
+      0.020307,
+      0.0101,
+      0.013669,
+      0.0188,
+      0.072914,
+      0.079767
+    ],
+    "top50_values": [
+      0.0798,
+      0.0798,
+      0.0798,
+      0.0046,
+      0.0203,
+      0.0101,
+      0.0137,
+      0.0188,
+      0.0729,
+      0.0798,
+      0.0798,
+      0.0485,
+      0.0005,
+      0.0149,
+      0.0167,
+      0.0099,
+      0.017,
+      0.0394,
+      0.0566,
+      0.0545,
+      0.0398,
+      0.014,
+      0.0054,
+      0.0005,
+      0.0068,
+      0.0082,
+      0.0294,
+      0.0798,
+      0.0798,
+      0.0693,
+      0.0139,
+      0.0024,
+      0.0001,
+      0.0029,
+      0.0041,
+      0.0317,
+      0.0666,
+      0.0895,
+      0.0247,
+      0.0004,
+      0.0065,
+      0.0032,
+      0.0022,
+      0.0076,
+      0.0239,
+      0.052,
+      0.0895,
+      0.0254,
+      0.0045,
+      0.0103
+    ],
+    "cell_grid": [
+      [
+        {
+          "bins": [
+            0.0798,
+            0.0798,
+            0.0798,
+            0.0046,
+            0.0203,
+            0.0101,
+            0.0137,
+            0.0188,
+            0.0729
+          ],
+          "dominant": 0,
+          "magnitude": 0.3798
+        },
+        {
+          "bins": [
+            0.0798,
+            0.0798,
+            0.0485,
+            0.0005,
+            0.0149,
+            0.0167,
+            0.0099,
+            0.017,
+            0.0394
+          ],
+          "dominant": 0,
+          "magnitude": 0.3065
+        },
+        {
+          "bins": [
+            0.0566,
+            0.0545,
+            0.0398,
+            0.014,
+            0.0054,
+            0.0005,
+            0.0068,
+            0.0082,
+            0.0294
+          ],
+          "dominant": 0,
+          "magnitude": 0.2152
+        },
+        {
+          "bins": [
+            0.0798,
+            0.0798,
+            0.0693,
+            0.0139,
+            0.0024,
+            0.0001,
+            0.0029,
+            0.0041,
+            0.0317
+          ],
+          "dominant": 0,
+          "magnitude": 0.284
+        },
+        {
+          "bins": [
+            0.0666,
+            0.0895,
+            0.0247,
+            0.0004,
+            0.0065,
+            0.0032,
+            0.0022,
+            0.0076,
+            0.0239
+          ],
+          "dominant": 1,
+          "magnitude": 0.2246
+        },
+        {
+          "bins": [
+            0.052,
+            0.0895,
+            0.0254,
+            0.0045,
+            0.0103,
+            0.0022,
+            0.0022,
+            0.0219,
+            0.0536
+          ],
+          "dominant": 1,
+          "magnitude": 0.2616
+        },
+        {
+          "bins": [
+            0.0662,
+            0.0895,
+            0.0632,
+            0.005,
+            0.0012,
+            0.0006,
+            0.0015,
+            0.0054,
+            0.0317
+          ],
+          "dominant": 1,
+          "magnitude": 0.2643
+        },
+        {
+          "bins": [
+            0.0895,
+            0.0895,
+            0.0895,
+            0.0027,
+            0.0012,
+            0.0012,
+            0.0017,
+            0.0071,
+            0.0235
+          ],
+          "dominant": 0,
+          "magnitude": 0.3059
+        }
+      ],
+      [
+        {
+          "bins": [
+            0.0455,
+            0.0944,
+            0.0201,
+            0.0042,
+            0.0099,
+            0.0017,
+            0.0014,
+            0.0073,
+            0.0178
+          ],
+          "dominant": 1,
+          "magnitude": 0.2023
+        },
+        {
+          "bins": [
+            0.0608,
+            0.0957,
+            0.0553,
+            0.0036,
+            0.0063,
+            0.0029,
+            0.0013,
+            0.0007,
+            0.0024
+          ],
+          "dominant": 1,
+          "magnitude": 0.229
+        },
+        {
+          "bins": [
+            0.0897,
+            0.0957,
+            0.0534,
+            0.0068,
+            0.0016,
+            0.0002,
+            0.0006,
+            0.0027,
+            0.0074
+          ],
+          "dominant": 1,
+          "magnitude": 0.2581
+        },
+        {
+          "bins": [
+            0.0957,
+            0.0957,
+            0.064,
+            0.0132,
+            0.0025,
+            0.0,
+            0.0003,
+            0.0051,
+            0.0077
+          ],
+          "dominant": 0,
+          "magnitude": 0.2842
+        },
+        {
+          "bins": [
+            0.0648,
+            0.0866,
+            0.0593,
+            0.0048,
+            0.0032,
+            0.0022,
+            0.0007,
+            0.0006,
+            0.0026
+          ],
+          "dominant": 1,
+          "magnitude": 0.2248
+        },
+        {
+          "bins": [
+            0.0866,
+            0.0866,
+            0.0613,
+            0.0093,
+            0.0029,
+            0.0004,
+            0.0002,
+            0.0011,
+            0.0045
+          ],
+          "dominant": 0,
+          "magnitude": 0.2529
+        },
+        {
+          "bins": [
+            0.0768,
+            0.0866,
+            0.0636,
+            0.0193,
+            0.0032,
+            0.0,
+            0.0005,
+            0.0041,
+            0.0106
+          ],
+          "dominant": 1,
+          "magnitude": 0.2647
+        },
+        {
+          "bins": [
+            0.0866,
+            0.0866,
+            0.0532,
+            0.0141,
+            0.0035,
+            0.0005,
+            0.0017,
+            0.0102,
+            0.021
+          ],
+          "dominant": 0,
+          "magnitude": 0.2774
+        }
+      ],
+      [
+        {
+          "bins": [
+            0.0802,
+            0.0802,
+            0.0802,
+            0.0306,
+            0.0066,
+            0.0005,
+            0.0002,
+            0.002,
+            0.0098
+          ],
+          "dominant": 0,
+          "magnitude": 0.2903
+        },
+        {
+          "bins": [
+            0.0802,
+            0.0802,
+            0.0575,
+            0.0208,
+            0.0084,
+            0.0008,
+            0.0002,
+            0.0015,
+            0.018
+          ],
+          "dominant": 0,
+          "magnitude": 0.2676
+        },
+        {
+          "bins": [
+            0.0802,
+            0.0802,
+            0.0472,
+            0.0269,
+            0.0106,
+            0.002,
+            0.0021,
+            0.0185,
+            0.0351
+          ],
+          "dominant": 0,
+          "magnitude": 0.3028
+        },
+        {
+          "bins": [
+            0.0802,
+            0.0802,
+            0.033,
+            0.0366,
+            0.0123,
+            0.0015,
+            0.0011,
+            0.0054,
+            0.0191
+          ],
+          "dominant": 0,
+          "magnitude": 0.2694
+        },
+        {
+          "bins": [
+            0.0923,
+            0.0712,
+            0.0311,
+            0.0086,
+            0.0128,
+            0.0076,
+            0.0076,
+            0.0107,
+            0.0185
+          ],
+          "dominant": 0,
+          "magnitude": 0.2604
+        },
+        {
+          "bins": [
+            0.0374,
+            0.0216,
+            0.0146,
+            0.0923,
+            0.0923,
+            0.039,
+            0.0224,
+            0.0212,
+            0.0185
+          ],
+          "dominant": 3,
+          "magnitude": 0.3593
+        },
+        {
+          "bins": [
+            0.0746,
+            0.0631,
+            0.0144,
+            0.0366,
+            0.035,
+            0.0096,
+            0.0082,
+            0.0082,
+            0.0128
+          ],
+          "dominant": 0,
+          "magnitude": 0.2625
+        },
+        {
+          "bins": [
+            0.0292,
+            0.0191,
+            0.0102,
+            0.0923,
+            0.0923,
+            0.0391,
+            0.02,
+            0.0157,
+            0.0111
+          ],
+          "dominant": 3,
+          "magnitude": 0.329
+        }
+      ],
+      [
+        {
+          "bins": [
+            0.0067,
+            0.0117,
+            0.0108,
+            0.0805,
+            0.0805,
+            0.0317,
+            0.0149,
+            0.0065,
+            0.0024
+          ],
+          "dominant": 3,
+          "magnitude": 0.2457
+        },
+        {
+          "bins": [
+            0.0185,
+            0.0647,
+            0.0558,
+            0.0645,
+            0.0805,
+            0.0384,
+            0.0188,
+            0.007,
+            0.0008
+          ],
+          "dominant": 4,
+          "magnitude": 0.349
+        },
+        {
+          "bins": [
+            0.0052,
+            0.0114,
+            0.0315,
+            0.0805,
+            0.0805,
+            0.0216,
+            0.0114,
+            0.0058,
+            0.0023
+          ],
+          "dominant": 3,
+          "magnitude": 0.2502
+        },
+        {
+          "bins": [
+            0.0055,
+            0.0381,
+            0.0805,
+            0.0805,
+            0.072,
+            0.0367,
+            0.0156,
+            0.0062,
+            0.0016
+          ],
+          "dominant": 2,
+          "magnitude": 0.3367
+        },
+        {
+          "bins": [
+            0.042,
+            0.0767,
+            0.0767,
+            0.0395,
+            0.042,
+            0.0237,
+            0.0074,
+            0.0028,
+            0.002
+          ],
+          "dominant": 1,
+          "magnitude": 0.3128
+        },
+        {
+          "bins": [
+            0.055,
+            0.0767,
+            0.0767,
+            0.0235,
+            0.0126,
+            0.0012,
+            0.0,
+            0.0001,
+            0.0072
+          ],
+          "dominant": 1,
+          "magnitude": 0.253
+        },
+        {
+          "bins": [
+            0.0094,
+            0.0684,
+            0.0767,
+            0.0767,
+            0.0733,
+            0.0352,
+            0.0085,
+            0.0047,
+            0.0037
+          ],
+          "dominant": 2,
+          "magnitude": 0.3566
+        },
+        {
+          "bins": [
+            0.0354,
+            0.0653,
+            0.0767,
+            0.0455,
+            0.0247,
+            0.0118,
+            0.0037,
+            0.0068,
+            0.0107
+          ],
+          "dominant": 2,
+          "magnitude": 0.2806
+        }
+      ],
+      [
+        {
+          "bins": [
+            0.0474,
+            0.0644,
+            0.0644,
+            0.0373,
+            0.0081,
+            0.0059,
+            0.018,
+            0.0215,
+            0.028
+          ],
+          "dominant": 1,
+          "magnitude": 0.295
+        },
+        {
+          "bins": [
+            0.0644,
+            0.0456,
+            0.043,
+            0.0183,
+            0.011,
+            0.0378,
+            0.0644,
+            0.0626,
+            0.0625
+          ],
+          "dominant": 0,
+          "magnitude": 0.4096
+        },
+        {
+          "bins": [
+            0.047,
+            0.0644,
+            0.0644,
+            0.043,
+            0.029,
+            0.011,
+            0.0116,
+            0.0184,
+            0.0368
+          ],
+          "dominant": 1,
+          "magnitude": 0.3256
+        },
+        {
+          "bins": [
+            0.0644,
+            0.0644,
+            0.0417,
+            0.0172,
+            0.0106,
+            0.009,
+            0.0491,
+            0.0551,
+            0.0644
+          ],
+          "dominant": 0,
+          "magnitude": 0.3759
+        },
+        {
+          "bins": [
+            0.0667,
+            0.0463,
+            0.0473,
+            0.0197,
+            0.0137,
+            0.0245,
+            0.0496,
+            0.0341,
+            0.0443
+          ],
+          "dominant": 0,
+          "magnitude": 0.3462
+        },
+        {
+          "bins": [
+            0.0667,
+            0.0292,
+            0.0395,
+            0.0189,
+            0.0132,
+            0.0095,
+            0.0516,
+            0.0493,
+            0.0667
+          ],
+          "dominant": 0,
+          "magnitude": 0.3446
+        },
+        {
+          "bins": [
+            0.0667,
+            0.0662,
+            0.0386,
+            0.0168,
+            0.0066,
+            0.0141,
+            0.0408,
+            0.0421,
+            0.058
+          ],
+          "dominant": 0,
+          "magnitude": 0.3499
+        },
+        {
+          "bins": [
+            0.0667,
+            0.0599,
+            0.0617,
+            0.0277,
+            0.0071,
+            0.02,
+            0.0374,
+            0.0398,
+            0.0667
+          ],
+          "dominant": 0,
+          "magnitude": 0.387
+        }
+      ],
+      [
+        {
+          "bins": [
+            0.0862,
+            0.0214,
+            0.0088,
+            0.0093,
+            0.0103,
+            0.0031,
+            0.0155,
+            0.0224,
+            0.0862
+          ],
+          "dominant": 0,
+          "magnitude": 0.2632
+        },
+        {
+          "bins": [
+            0.0862,
+            0.0324,
+            0.0168,
+            0.0131,
+            0.0145,
+            0.0051,
+            0.0146,
+            0.0403,
+            0.0862
+          ],
+          "dominant": 0,
+          "magnitude": 0.3092
+        },
+        {
+          "bins": [
+            0.0862,
+            0.0421,
+            0.0428,
+            0.0133,
+            0.007,
+            0.0077,
+            0.0119,
+            0.0164,
+            0.075
+          ],
+          "dominant": 0,
+          "magnitude": 0.3024
+        },
+        {
+          "bins": [
+            0.0862,
+            0.0422,
+            0.0289,
+            0.0096,
+            0.0086,
+            0.0048,
+            0.0054,
+            0.0302,
+            0.0862
+          ],
+          "dominant": 0,
+          "magnitude": 0.3021
+        },
+        {
+          "bins": [
+            0.0731,
+            0.041,
+            0.0348,
+            0.0308,
+            0.0143,
+            0.0084,
+            0.0144,
+            0.044,
+            0.0731
+          ],
+          "dominant": 0,
+          "magnitude": 0.3339
+        },
+        {
+          "bins": [
+            0.0731,
+            0.045,
+            0.0249,
+            0.026,
+            0.0096,
+            0.0091,
+            0.0175,
+            0.0719,
+            0.0731
+          ],
+          "dominant": 0,
+          "magnitude": 0.3502
+        },
+        {
+          "bins": [
+            0.0731,
+            0.0437,
+            0.02,
+            0.0096,
+            0.0077,
+            0.0072,
+            0.0105,
+            0.0423,
+            0.0731
+          ],
+          "dominant": 0,
+          "magnitude": 0.2872
+        },
+        {
+          "bins": [
+            0.0681,
+            0.0519,
+            0.0204,
+            0.0232,
+            0.0104,
+            0.0071,
+            0.0239,
+            0.0682,
+            0.0731
+          ],
+          "dominant": 8,
+          "magnitude": 0.3463
+        }
+      ],
+      [
+        {
+          "bins": [
+            0.0745,
+            0.0482,
+            0.0134,
+            0.015,
+            0.0044,
+            0.0068,
+            0.0169,
+            0.0531,
+            0.0745
+          ],
+          "dominant": 0,
+          "magnitude": 0.3068
+        },
+        {
+          "bins": [
+            0.0745,
+            0.0745,
+            0.01,
+            0.0088,
+            0.0023,
+            0.0119,
+            0.0141,
+            0.0255,
+            0.0745
+          ],
+          "dominant": 0,
+          "magnitude": 0.2961
+        },
+        {
+          "bins": [
+            0.0599,
+            0.0574,
+            0.0263,
+            0.0173,
+            0.0116,
+            0.0077,
+            0.0305,
+            0.0563,
+            0.0745
+          ],
+          "dominant": 8,
+          "magnitude": 0.3415
+        },
+        {
+          "bins": [
+            0.0745,
+            0.0745,
+            0.0262,
+            0.0135,
+            0.0111,
+            0.0076,
+            0.0124,
+            0.0194,
+            0.0745
+          ],
+          "dominant": 0,
+          "magnitude": 0.3137
+        },
+        {
+          "bins": [
+            0.0862,
+            0.0862,
+            0.0059,
+            0.0025,
+            0.0031,
+            0.0056,
+            0.0038,
+            0.0234,
+            0.0766
+          ],
+          "dominant": 0,
+          "magnitude": 0.2933
+        },
+        {
+          "bins": [
+            0.0862,
+            0.0511,
+            0.0037,
+            0.0028,
+            0.0057,
+            0.0033,
+            0.0059,
+            0.0177,
+            0.0862
+          ],
+          "dominant": 0,
+          "magnitude": 0.2626
+        },
+        {
+          "bins": [
+            0.0862,
+            0.0692,
+            0.0106,
+            0.019,
+            0.0195,
+            0.0095,
+            0.0049,
+            0.011,
+            0.0458
+          ],
+          "dominant": 0,
+          "magnitude": 0.2757
+        },
+        {
+          "bins": [
+            0.0862,
+            0.0369,
+            0.0106,
+            0.0208,
+            0.0252,
+            0.0315,
+            0.0184,
+            0.0219,
+            0.065
+          ],
+          "dominant": 0,
+          "magnitude": 0.3165
+        }
+      ],
+      [
+        {
+          "bins": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "dominant": 0,
+          "magnitude": 0.0
+        },
+        {
+          "bins": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "dominant": 0,
+          "magnitude": 0.0
+        },
+        {
+          "bins": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "dominant": 0,
+          "magnitude": 0.0
+        },
+        {
+          "bins": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "dominant": 0,
+          "magnitude": 0.0
+        },
+        {
+          "bins": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "dominant": 0,
+          "magnitude": 0.0
+        },
+        {
+          "bins": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "dominant": 0,
+          "magnitude": 0.0
+        },
+        {
+          "bins": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "dominant": 0,
+          "magnitude": 0.0
+        },
+        {
+          "bins": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "dominant": 0,
+          "magnitude": 0.0
+        }
+      ]
+    ],
+    "stats": {
+      "min": 0.0,
+      "max": 0.095655,
+      "mean": 0.032999,
+      "std": 0.029397,
+      "nonzero": 509
+    }
+  },
+  "societal_impact": "# Personality Profile: Billie Eilish\n\nEilish's exceptionally high Openness (92/100) paired with moderate-to-high Conscientiousness (78/100) suggests she likely approaches her creative work with both imaginative experimentation and disciplined execution. Her lower Extraversion (45/100) indicates she may prefer smaller social circles and controlled public interactions, which could foster deeper, more intentional relationships while potentially creating distance in large social settings. The combination of these traits suggests a thoughtful, introspective artist who channels personal experience into her work while maintaining focused professional standards.\n\nHer elevated Openness combined with moderate Agreeableness (70/100) and Neuroticism (65/100) may position her to influence contemporary music culture through emotionally authentic and unconventional artistic expression. This profile suggests she tends to embrace artistic risk-taking and novel approaches while remaining somewhat sensitive to criticism or emotional complexity\u00e2\u20ac\u201dqualities that may resonate with audiences seeking genuine, non-conformist perspectives. In her field, this personality configuration may contribute to pushing genre boundaries and normalizing discussions of mental health and introspection in mainstream media."
+}

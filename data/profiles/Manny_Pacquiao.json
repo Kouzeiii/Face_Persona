@@ -1,0 +1,1083 @@
+{
+  "name": "Manny Pacquiao",
+  "profession": "athlete",
+  "profession_label": "Athlete / Sports Figure",
+  "biography_scores": {
+    "openness": 62.0,
+    "conscientiousness": 88.0,
+    "extraversion": 75.0,
+    "agreeableness": 70.0,
+    "neuroticism": 28.0
+  },
+  "estimated_scores": {
+    "openness": 75.1,
+    "conscientiousness": 84.0,
+    "extraversion": 72.9,
+    "agreeableness": 64.8,
+    "neuroticism": 43.1
+  },
+  "reasoning": "Pacquiao demonstrates exceptionally high conscientiousness through sustained excellence across multiple domains (boxing, politics, business, entertainment), reflecting disciplined goal-pursuit and achievement orientation typical of elite athletes. His extraversion is evident in political engagement, public performance, and media presence, while moderate-to-high openness emerges from career diversification across sports, entertainment, music, and religion, though his documented conservative political positions suggest some ideological rigidity.",
+  "embedding_info": {
+    "face_detected": true,
+    "face_box": {
+      "x": 84,
+      "y": 82,
+      "w": 283,
+      "h": 283,
+      "img_w": 500,
+      "img_h": 660
+    },
+    "embedding_dim": 512,
+    "norm_before": 3.7574515342712402,
+    "top10_values": [
+      0.034088,
+      0.009371,
+      0.032575,
+      0.018268,
+      0.07434,
+      0.029977,
+      0.063139,
+      0.063151,
+      0.051935,
+      0.031398
+    ],
+    "top50_values": [
+      0.0341,
+      0.0094,
+      0.0326,
+      0.0183,
+      0.0743,
+      0.03,
+      0.0631,
+      0.0632,
+      0.0519,
+      0.0314,
+      0.0079,
+      0.0386,
+      0.0615,
+      0.0743,
+      0.0186,
+      0.0613,
+      0.0401,
+      0.0421,
+      0.0521,
+      0.0086,
+      0.0247,
+      0.006,
+      0.0743,
+      0.0182,
+      0.034,
+      0.0282,
+      0.0629,
+      0.0423,
+      0.0078,
+      0.0351,
+      0.0171,
+      0.0743,
+      0.0203,
+      0.031,
+      0.0375,
+      0.0684,
+      0.026,
+      0.0156,
+      0.0345,
+      0.0264,
+      0.0685,
+      0.0008,
+      0.0297,
+      0.021,
+      0.0241,
+      0.05,
+      0.03,
+      0.0357,
+      0.0095,
+      0.0558
+    ],
+    "cell_grid": [
+      [
+        {
+          "bins": [
+            0.0341,
+            0.0094,
+            0.0326,
+            0.0183,
+            0.0743,
+            0.03,
+            0.0631,
+            0.0632,
+            0.0519
+          ],
+          "dominant": 4,
+          "magnitude": 0.3769
+        },
+        {
+          "bins": [
+            0.0314,
+            0.0079,
+            0.0386,
+            0.0615,
+            0.0743,
+            0.0186,
+            0.0613,
+            0.0401,
+            0.0421
+          ],
+          "dominant": 4,
+          "magnitude": 0.3758
+        },
+        {
+          "bins": [
+            0.0521,
+            0.0086,
+            0.0247,
+            0.006,
+            0.0743,
+            0.0182,
+            0.034,
+            0.0282,
+            0.0629
+          ],
+          "dominant": 4,
+          "magnitude": 0.309
+        },
+        {
+          "bins": [
+            0.0423,
+            0.0078,
+            0.0351,
+            0.0171,
+            0.0743,
+            0.0203,
+            0.031,
+            0.0375,
+            0.0684
+          ],
+          "dominant": 4,
+          "magnitude": 0.3338
+        },
+        {
+          "bins": [
+            0.026,
+            0.0156,
+            0.0345,
+            0.0264,
+            0.0685,
+            0.0008,
+            0.0297,
+            0.021,
+            0.0241
+          ],
+          "dominant": 4,
+          "magnitude": 0.2466
+        },
+        {
+          "bins": [
+            0.05,
+            0.03,
+            0.0357,
+            0.0095,
+            0.0558,
+            0.002,
+            0.0386,
+            0.0275,
+            0.0423
+          ],
+          "dominant": 4,
+          "magnitude": 0.2914
+        },
+        {
+          "bins": [
+            0.0404,
+            0.033,
+            0.0685,
+            0.0366,
+            0.0638,
+            0.008,
+            0.0135,
+            0.0315,
+            0.0642
+          ],
+          "dominant": 2,
+          "magnitude": 0.3595
+        },
+        {
+          "bins": [
+            0.0685,
+            0.0685,
+            0.0685,
+            0.0562,
+            0.0685,
+            0.0144,
+            0.0263,
+            0.0603,
+            0.0685
+          ],
+          "dominant": 0,
+          "magnitude": 0.4997
+        }
+      ],
+      [
+        {
+          "bins": [
+            0.0386,
+            0.0163,
+            0.0253,
+            0.0012,
+            0.0312,
+            0.0021,
+            0.0298,
+            0.0212,
+            0.0395
+          ],
+          "dominant": 8,
+          "magnitude": 0.2052
+        },
+        {
+          "bins": [
+            0.0321,
+            0.0173,
+            0.0159,
+            0.013,
+            0.048,
+            0.005,
+            0.0251,
+            0.0234,
+            0.0343
+          ],
+          "dominant": 4,
+          "magnitude": 0.2141
+        },
+        {
+          "bins": [
+            0.0709,
+            0.0464,
+            0.057,
+            0.022,
+            0.0424,
+            0.023,
+            0.053,
+            0.0709,
+            0.0709
+          ],
+          "dominant": 0,
+          "magnitude": 0.4565
+        },
+        {
+          "bins": [
+            0.0709,
+            0.0449,
+            0.0461,
+            0.0145,
+            0.0481,
+            0.0707,
+            0.0709,
+            0.0709,
+            0.0709
+          ],
+          "dominant": 0,
+          "magnitude": 0.5079
+        },
+        {
+          "bins": [
+            0.0304,
+            0.019,
+            0.0199,
+            0.0164,
+            0.0504,
+            0.0059,
+            0.0369,
+            0.0145,
+            0.0241
+          ],
+          "dominant": 4,
+          "magnitude": 0.2175
+        },
+        {
+          "bins": [
+            0.0281,
+            0.0247,
+            0.0529,
+            0.0131,
+            0.0604,
+            0.0177,
+            0.0492,
+            0.0158,
+            0.0193
+          ],
+          "dominant": 4,
+          "magnitude": 0.2812
+        },
+        {
+          "bins": [
+            0.0654,
+            0.0465,
+            0.0486,
+            0.0166,
+            0.0538,
+            0.0489,
+            0.0532,
+            0.0562,
+            0.0654
+          ],
+          "dominant": 0,
+          "magnitude": 0.4546
+        },
+        {
+          "bins": [
+            0.0654,
+            0.0636,
+            0.0654,
+            0.0269,
+            0.0654,
+            0.0332,
+            0.0566,
+            0.0422,
+            0.0654
+          ],
+          "dominant": 0,
+          "magnitude": 0.4841
+        }
+      ],
+      [
+        {
+          "bins": [
+            0.0257,
+            0.0191,
+            0.0472,
+            0.006,
+            0.0637,
+            0.0218,
+            0.0377,
+            0.0157,
+            0.0213
+          ],
+          "dominant": 4,
+          "magnitude": 0.2582
+        },
+        {
+          "bins": [
+            0.0332,
+            0.011,
+            0.0296,
+            0.0004,
+            0.0668,
+            0.0047,
+            0.0227,
+            0.0105,
+            0.0337
+          ],
+          "dominant": 4,
+          "magnitude": 0.2126
+        },
+        {
+          "bins": [
+            0.0668,
+            0.0612,
+            0.0668,
+            0.0347,
+            0.0647,
+            0.0292,
+            0.0545,
+            0.0567,
+            0.0624
+          ],
+          "dominant": 0,
+          "magnitude": 0.497
+        },
+        {
+          "bins": [
+            0.064,
+            0.0668,
+            0.0668,
+            0.0151,
+            0.0668,
+            0.0176,
+            0.0238,
+            0.0438,
+            0.0538
+          ],
+          "dominant": 1,
+          "magnitude": 0.4185
+        },
+        {
+          "bins": [
+            0.0457,
+            0.0219,
+            0.0397,
+            0.0013,
+            0.0682,
+            0.0137,
+            0.0403,
+            0.0118,
+            0.044
+          ],
+          "dominant": 4,
+          "magnitude": 0.2866
+        },
+        {
+          "bins": [
+            0.0546,
+            0.0261,
+            0.0505,
+            0.0043,
+            0.0682,
+            0.0166,
+            0.0449,
+            0.0123,
+            0.0525
+          ],
+          "dominant": 4,
+          "magnitude": 0.33
+        },
+        {
+          "bins": [
+            0.0656,
+            0.0557,
+            0.0682,
+            0.0207,
+            0.0682,
+            0.0177,
+            0.0271,
+            0.0327,
+            0.0583
+          ],
+          "dominant": 2,
+          "magnitude": 0.4142
+        },
+        {
+          "bins": [
+            0.0678,
+            0.019,
+            0.0411,
+            0.0251,
+            0.0478,
+            0.0125,
+            0.0553,
+            0.0421,
+            0.0682
+          ],
+          "dominant": 8,
+          "magnitude": 0.3789
+        }
+      ],
+      [
+        {
+          "bins": [
+            0.0528,
+            0.0225,
+            0.0334,
+            0.0118,
+            0.0507,
+            0.0019,
+            0.0362,
+            0.0118,
+            0.05
+          ],
+          "dominant": 0,
+          "magnitude": 0.2711
+        },
+        {
+          "bins": [
+            0.0705,
+            0.0312,
+            0.0342,
+            0.0131,
+            0.0502,
+            0.0072,
+            0.0605,
+            0.0191,
+            0.0705
+          ],
+          "dominant": 0,
+          "magnitude": 0.3565
+        },
+        {
+          "bins": [
+            0.0705,
+            0.0156,
+            0.0514,
+            0.0349,
+            0.0232,
+            0.0173,
+            0.0542,
+            0.0392,
+            0.0694
+          ],
+          "dominant": 0,
+          "magnitude": 0.3757
+        },
+        {
+          "bins": [
+            0.0705,
+            0.0172,
+            0.0538,
+            0.0403,
+            0.0445,
+            0.0124,
+            0.0535,
+            0.042,
+            0.0705
+          ],
+          "dominant": 0,
+          "magnitude": 0.4047
+        },
+        {
+          "bins": [
+            0.0593,
+            0.0163,
+            0.0305,
+            0.0067,
+            0.0629,
+            0.0129,
+            0.0444,
+            0.0133,
+            0.0579
+          ],
+          "dominant": 4,
+          "magnitude": 0.3042
+        },
+        {
+          "bins": [
+            0.0461,
+            0.0327,
+            0.0488,
+            0.0169,
+            0.0679,
+            0.0084,
+            0.0626,
+            0.03,
+            0.0413
+          ],
+          "dominant": 4,
+          "magnitude": 0.3547
+        },
+        {
+          "bins": [
+            0.0679,
+            0.0181,
+            0.0286,
+            0.0151,
+            0.0679,
+            0.0028,
+            0.0379,
+            0.0205,
+            0.0679
+          ],
+          "dominant": 0,
+          "magnitude": 0.3267
+        },
+        {
+          "bins": [
+            0.0679,
+            0.0332,
+            0.0359,
+            0.005,
+            0.0679,
+            0.0041,
+            0.0679,
+            0.0445,
+            0.0628
+          ],
+          "dominant": 0,
+          "magnitude": 0.3892
+        }
+      ],
+      [
+        {
+          "bins": [
+            0.04,
+            0.0322,
+            0.0268,
+            0.0135,
+            0.0581,
+            0.023,
+            0.0654,
+            0.0377,
+            0.0296
+          ],
+          "dominant": 6,
+          "magnitude": 0.3263
+        },
+        {
+          "bins": [
+            0.0411,
+            0.0272,
+            0.0254,
+            0.026,
+            0.0404,
+            0.0336,
+            0.0654,
+            0.0627,
+            0.0383
+          ],
+          "dominant": 6,
+          "magnitude": 0.3601
+        },
+        {
+          "bins": [
+            0.0654,
+            0.0352,
+            0.0142,
+            0.0003,
+            0.0654,
+            0.013,
+            0.0636,
+            0.048,
+            0.0534
+          ],
+          "dominant": 0,
+          "magnitude": 0.3585
+        },
+        {
+          "bins": [
+            0.0654,
+            0.0493,
+            0.0225,
+            0.0023,
+            0.0654,
+            0.0239,
+            0.0575,
+            0.0475,
+            0.0588
+          ],
+          "dominant": 0,
+          "magnitude": 0.3926
+        },
+        {
+          "bins": [
+            0.0374,
+            0.0233,
+            0.0418,
+            0.0359,
+            0.0329,
+            0.0172,
+            0.0671,
+            0.0649,
+            0.0411
+          ],
+          "dominant": 6,
+          "magnitude": 0.3616
+        },
+        {
+          "bins": [
+            0.0469,
+            0.021,
+            0.0454,
+            0.0069,
+            0.056,
+            0.0073,
+            0.0505,
+            0.0224,
+            0.0464
+          ],
+          "dominant": 4,
+          "magnitude": 0.3028
+        },
+        {
+          "bins": [
+            0.0591,
+            0.0339,
+            0.037,
+            0.0068,
+            0.0671,
+            0.0157,
+            0.0671,
+            0.0588,
+            0.0576
+          ],
+          "dominant": 4,
+          "magnitude": 0.4031
+        },
+        {
+          "bins": [
+            0.067,
+            0.018,
+            0.0291,
+            0.0029,
+            0.0656,
+            0.0038,
+            0.0589,
+            0.0282,
+            0.0662
+          ],
+          "dominant": 0,
+          "magnitude": 0.3397
+        }
+      ],
+      [
+        {
+          "bins": [
+            0.0455,
+            0.0345,
+            0.0496,
+            0.0042,
+            0.0491,
+            0.0076,
+            0.0247,
+            0.0089,
+            0.0391
+          ],
+          "dominant": 2,
+          "magnitude": 0.2632
+        },
+        {
+          "bins": [
+            0.0608,
+            0.0648,
+            0.0664,
+            0.0337,
+            0.0664,
+            0.0123,
+            0.0289,
+            0.0183,
+            0.0494
+          ],
+          "dominant": 2,
+          "magnitude": 0.401
+        },
+        {
+          "bins": [
+            0.0506,
+            0.0296,
+            0.0437,
+            0.0022,
+            0.0664,
+            0.0047,
+            0.0244,
+            0.0104,
+            0.0488
+          ],
+          "dominant": 4,
+          "magnitude": 0.2808
+        },
+        {
+          "bins": [
+            0.0597,
+            0.063,
+            0.0664,
+            0.016,
+            0.0664,
+            0.0269,
+            0.0444,
+            0.0451,
+            0.0664
+          ],
+          "dominant": 2,
+          "magnitude": 0.4543
+        },
+        {
+          "bins": [
+            0.0287,
+            0.0435,
+            0.0647,
+            0.0288,
+            0.0479,
+            0.0033,
+            0.0325,
+            0.0176,
+            0.0246
+          ],
+          "dominant": 2,
+          "magnitude": 0.2916
+        },
+        {
+          "bins": [
+            0.0178,
+            0.0268,
+            0.0587,
+            0.0315,
+            0.0552,
+            0.0201,
+            0.0647,
+            0.0555,
+            0.0384
+          ],
+          "dominant": 6,
+          "magnitude": 0.3687
+        },
+        {
+          "bins": [
+            0.0365,
+            0.0607,
+            0.0647,
+            0.0256,
+            0.0433,
+            0.0167,
+            0.0363,
+            0.0375,
+            0.0427
+          ],
+          "dominant": 2,
+          "magnitude": 0.364
+        },
+        {
+          "bins": [
+            0.0391,
+            0.045,
+            0.0647,
+            0.0419,
+            0.0454,
+            0.0254,
+            0.062,
+            0.0647,
+            0.0647
+          ],
+          "dominant": 2,
+          "magnitude": 0.4529
+        }
+      ],
+      [
+        {
+          "bins": [
+            0.0126,
+            0.0196,
+            0.0265,
+            0.0128,
+            0.0505,
+            0.0247,
+            0.0618,
+            0.0618,
+            0.0441
+          ],
+          "dominant": 6,
+          "magnitude": 0.3144
+        },
+        {
+          "bins": [
+            0.031,
+            0.0322,
+            0.0314,
+            0.0099,
+            0.0618,
+            0.0195,
+            0.0532,
+            0.0618,
+            0.0457
+          ],
+          "dominant": 4,
+          "magnitude": 0.3465
+        },
+        {
+          "bins": [
+            0.0338,
+            0.0282,
+            0.0294,
+            0.0157,
+            0.0376,
+            0.033,
+            0.0618,
+            0.0618,
+            0.0618
+          ],
+          "dominant": 6,
+          "magnitude": 0.3631
+        },
+        {
+          "bins": [
+            0.0618,
+            0.0581,
+            0.0363,
+            0.0165,
+            0.0594,
+            0.0305,
+            0.0587,
+            0.0543,
+            0.0618
+          ],
+          "dominant": 0,
+          "magnitude": 0.4374
+        },
+        {
+          "bins": [
+            0.0519,
+            0.0198,
+            0.0211,
+            0.009,
+            0.0672,
+            0.0104,
+            0.0397,
+            0.0321,
+            0.0462
+          ],
+          "dominant": 4,
+          "magnitude": 0.2974
+        },
+        {
+          "bins": [
+            0.0672,
+            0.0126,
+            0.0251,
+            0.0043,
+            0.0672,
+            0.0063,
+            0.028,
+            0.0191,
+            0.0639
+          ],
+          "dominant": 0,
+          "magnitude": 0.2937
+        },
+        {
+          "bins": [
+            0.0672,
+            0.0474,
+            0.0232,
+            0.0259,
+            0.0672,
+            0.0253,
+            0.0637,
+            0.0405,
+            0.0595
+          ],
+          "dominant": 0,
+          "magnitude": 0.4199
+        },
+        {
+          "bins": [
+            0.0672,
+            0.0243,
+            0.0351,
+            0.0091,
+            0.0672,
+            0.0317,
+            0.0555,
+            0.0249,
+            0.0672
+          ],
+          "dominant": 0,
+          "magnitude": 0.3822
+        }
+      ],
+      [
+        {
+          "bins": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "dominant": 0,
+          "magnitude": 0.0
+        },
+        {
+          "bins": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "dominant": 0,
+          "magnitude": 0.0
+        },
+        {
+          "bins": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "dominant": 0,
+          "magnitude": 0.0
+        },
+        {
+          "bins": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "dominant": 0,
+          "magnitude": 0.0
+        },
+        {
+          "bins": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "dominant": 0,
+          "magnitude": 0.0
+        },
+        {
+          "bins": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "dominant": 0,
+          "magnitude": 0.0
+        },
+        {
+          "bins": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "dominant": 0,
+          "magnitude": 0.0
+        },
+        {
+          "bins": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "dominant": 0,
+          "magnitude": 0.0
+        }
+      ]
+    ],
+    "stats": {
+      "min": 0.00032,
+      "max": 0.07434,
+      "mean": 0.039082,
+      "std": 0.020633,
+      "nonzero": 512
+    }
+  },
+  "societal_impact": "# Personality Profile Note: Manny Pacquiao\n\nPacquiao's exceptionally high conscientiousness (88/100) suggests he approaches his athletic career with exceptional discipline, dedication, and attention to detail\u2014traits essential for sustained excellence in professional boxing. His moderate-to-high extraversion (75/100) combined with solid agreeableness (70/100) indicates he likely maintains collaborative relationships with trainers and team members while remaining socially engaged with fans and media. The notably low neuroticism (28/100) suggests emotional stability and resilience, which may enable him to manage the psychological pressures of elite competition and maintain composure during high-stakes performances.\n\nIn his broader societal impact, this personality constellation may position Pacquiao as a stabilizing and achievement-oriented figure in professional sports, where his conscientiousness likely translates into consistent performance and mentorship of younger athletes. His combination of extraversion and agreeableness suggests capacity for positive community engagement and advocacy work beyond the ring, while his emotional stability may enhance his credibility as a public figure and role model. Moderate openness (62/100) suggests he may be somewhat traditional in approach, potentially contributing to conservative leadership rather than experimental innovation within his sport."
+}

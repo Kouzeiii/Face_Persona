@@ -1,0 +1,574 @@
+{
+  "Billie Eilish": {
+    "image_filename": "0165ddbea1234679a5a3fce3be817346.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Justin Bieber": {
+    "image_filename": null,
+    "status": "manual_review_required",
+    "candidates": [
+      "7851217e345d4e4abde1b8b8c0b55506.webp",
+      "950a8474f56f4998b31b544ed9cdebf0.webp"
+    ]
+  },
+  "Elon Musk": {
+    "image_filename": null,
+    "status": "manual_review_required",
+    "candidates": [
+      "066ed13146f946e4aa16b5723840522e.webp",
+      "9956470cd9d542d99e4cd2ec4d5c4251.webp"
+    ]
+  },
+  "Cong TV": {
+    "image_filename": null,
+    "status": "manual_review_required",
+    "candidates": [
+      "2e64127d41634986ac6f71e5e9df39a9.webp",
+      "f4197e986abf42ea9b412e4713d2e5bc.webp"
+    ]
+  },
+  "Cristian Ronaldo": {
+    "image_filename": "3629d2570355456a90cb87756ee6f8fb.webp",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Jesus Christ": {
+    "image_filename": "9109cdab096f483eb3eb99b6a6bd3f5f.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Zaldy Co": {
+    "image_filename": "129b325be3ae4447a6303a25418f0d8b.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Mark Joseph Mabazza Barcel": {
+    "image_filename": "136046ed11774f40a2876d3627f88b3d.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Kendall Jenner": {
+    "image_filename": "f9bafcf6bdec47edbb7b5643b6447941.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Catriona Gray": {
+    "image_filename": "793d342fe2804f7ea3eb2595f341ca74.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Pia Wurtzbach": {
+    "image_filename": "2e4738a095b541a286476dd3633bc10f.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Manny Pacquiao": {
+    "image_filename": "6c49b73eec5d4d3a830f7c155f19362d.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Lea Salonga": {
+    "image_filename": "6754b5d0c5db423fa3be61d384ed71c9.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Vice Ganda": {
+    "image_filename": "d9cea1d71e1e4b6c90e5557a6a305a65.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Kathryn Bernardo": {
+    "image_filename": "084e34ff2d3241f3b2bf260495b17ad9.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Anne Curtis": {
+    "image_filename": "cc1f005bc8bc4271a9aa832590c696f6.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Sarah Geronimo": {
+    "image_filename": "a22e70d1847e43dba410b4acaa4e3c7b.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Daniel Padilla": {
+    "image_filename": "6afc96a1f9ad48c6b12c7dcd9bad08c9.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Marian Rivera": {
+    "image_filename": "ab8de07c38ad49f493b37723e8fe4cea.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Alden Richards": {
+    "image_filename": "343a3ae0587b4bec837685de3690c61e.png",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Dingdong Dantes": {
+    "image_filename": "504fc71ef2b2442189de19960b026e0c.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Heart Evangelista": {
+    "image_filename": "616044d37c7845fa986ddede20a552b7.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Carlos Yulo": {
+    "image_filename": "f7a64cb7e5094e25b09ca3465eb14924.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Efren Reyes": {
+    "image_filename": "c18653efd10a47a29aac4152da6e8eef.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Hidilyn Diaz": {
+    "image_filename": null,
+    "status": "manual_review_required",
+    "candidates": []
+  },
+  "Jose Rizal": {
+    "image_filename": "1803208c05554fe991963b409df302a9.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Leni Robredo": {
+    "image_filename": "63cf6c0e8fb84f6084b93742707c839b.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Rodrigo Duterte": {
+    "image_filename": "a2d4f3e01eb84eb1b87a0419af3b1939.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Miriam Defensor Santiago": {
+    "image_filename": "455d8219212b443e916c5a9536ab26cc.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Ramon Ang": {
+    "image_filename": "d61510342f094950998c862c46d4b134.webp",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Henry Sy": {
+    "image_filename": "5288b7e48d4d4d5eb740523bf3828ff7.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Lionel Messi": {
+    "image_filename": "47487dff693a4b90af69d3d5856c8da5.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "LeBron James": {
+    "image_filename": "79dc8dbec1b94fbc81ffd8c2ea023e32.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Stephen Curry": {
+    "image_filename": "9abe0c736a8848c7b51e4c959cf78025.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Michael Jordan": {
+    "image_filename": "6a4c46e8cc4f478bab01a33d3b76b721.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Kobe Bryant": {
+    "image_filename": "880bb670d6084d65b8b85c06a4092947.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Serena Williams": {
+    "image_filename": "3f991f3fccf54aac94239b51229cf2a5.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Rafael Nadal": {
+    "image_filename": "879494d859374e3fba04e8950873c3f2.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Roger Federer": {
+    "image_filename": null,
+    "status": "manual_review_required",
+    "candidates": []
+  },
+  "Novak Djokovic": {
+    "image_filename": "b5d6362db325494a9f2141c25ff6c42d.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Usain Bolt": {
+    "image_filename": "ca5c07151b854998920aceb3ba4a8b36.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Lewis Hamilton": {
+    "image_filename": "788b9d5b36d04363813d1e1e1e2e0574.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Max Verstappen": {
+    "image_filename": "4b0e2eec02b74f3b9c888db8dfc05f12.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Simone Biles": {
+    "image_filename": "fa088066615649f5b289480b2f4248a4.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Tiger Woods": {
+    "image_filename": "8e323ec6c7bf4576ad5823e9df33a17b.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Beyonce": {
+    "image_filename": "1b47848faa144c8ea7289db8f94d3157.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Taylor Swift": {
+    "image_filename": "6fae081f681448599a67a672584f59ad.png",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Rihanna": {
+    "image_filename": "f90e9cfc25f44c2cad65659f9b866329.png",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Drake": {
+    "image_filename": "15544b71813149ddac91512672d03495.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Eminem": {
+    "image_filename": "7db0c22536d14334a18ca39dbd6e0613.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Ariana Grande": {
+    "image_filename": "0d43de5693bb424f9c963c6c91f9b94e.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Bruno Mars": {
+    "image_filename": "a911067dd44b43a39fc95423d8e4abe5.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Ed Sheeran": {
+    "image_filename": "1a0523e62a8942789cdf71fc82a72e9b.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Lady Gaga": {
+    "image_filename": "ce8e284dc37f4215978e206b5e387563.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "The Weeknd": {
+    "image_filename": "5951b0a3a5334525bb50cbe91ba08c70.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Adele": {
+    "image_filename": "8c63beb664a840deba54bf3a44e4606b.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Shakira": {
+    "image_filename": "27cef84777474445b7c1c9688aa45bc2.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Dua Lipa": {
+    "image_filename": "129f8456bc144a3d87037f378601a7f3.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Leonardo DiCaprio": {
+    "image_filename": "3411ca0b9bce4907925964ca7eaa6981.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Selena Gomez": {
+    "image_filename": "15fb7999863f4bbcaaad34f44f4ee08e.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Brad Pitt": {
+    "image_filename": "aef600ad93574e33964036468b04dab1.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Tom Cruise": {
+    "image_filename": "352cf0010a8e49b19ebf8e56e533f5f8.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Keanu Reeves": {
+    "image_filename": "5dfee59b9e3a4615b03b11ad10d8a59c.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Robert Downey Jr.": {
+    "image_filename": "fb8f460e48c244178c751cf232dfa3a5.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Dwayne Johnson": {
+    "image_filename": "884cdcdab7f545d9baa5bd2d8dbbede6.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Johnny Depp": {
+    "image_filename": "92db7b839d7f4ded88d5559209b97121.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Will Smith": {
+    "image_filename": "324ce319aceb41d68bd423cff52f2619.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Meryl Streep": {
+    "image_filename": "e600476123364797996f377083096158.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Scarlett Johansson": {
+    "image_filename": "e9971a84638a47cc8a194dd7257d93d9.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Margot Robbie": {
+    "image_filename": "aca2bb2991654f58ad3b9b4b59524361.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Emma Watson": {
+    "image_filename": "2dad6d5c0b8a43e0b425d8d4c5dc4b01.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Zendaya": {
+    "image_filename": "c4738e4b0fe0495596f86db6dd665983.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Cillian Murphy": {
+    "image_filename": "9be31bdc509b4bc9a1afda861b12ec7f.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Mark Zuckerberg": {
+    "image_filename": "8bbb460548d643be950314c8762a9510.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Bill Gates": {
+    "image_filename": null,
+    "status": "manual_review_required",
+    "candidates": []
+  },
+  "Steve Jobs": {
+    "image_filename": "5a290daae54546d2b0be72c17c98a538.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Jeff Bezos": {
+    "image_filename": "e40825f1270b470daf0444c16246b6ea.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Jensen Huang": {
+    "image_filename": "e5cad8d1e63146aea695f450c29a3a4e.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Warren Buffett": {
+    "image_filename": "0abe43b3f44e4562916bf596ebb1a37a.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Sam Altman": {
+    "image_filename": null,
+    "status": "manual_review_required",
+    "candidates": []
+  },
+  "Tim Cook": {
+    "image_filename": "33b3d97ac2054d51a79fb1f808d45678.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Satya Nadella": {
+    "image_filename": "0d8571e9673f47f3a1d90adcc681a101.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Bernard Arnault": {
+    "image_filename": "64a472758ac54350b073b62679297a2b.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Sundar Pichai": {
+    "image_filename": "306b5dee8a8d4b588f54a8333c3dd196.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Jack Ma": {
+    "image_filename": "ac22a7380fd84bbb939ee945155b66d8.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "PewDiePie": {
+    "image_filename": "ae7fb705342f457fa7e347b030ca4d19.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Charli D'Amelio": {
+    "image_filename": "a8414e37ffb5409e88f8ff5d374c3d63.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Khaby Lame": {
+    "image_filename": "ee5b86a2afaf4c4e992ac7f52a292a0d.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "MrBeast": {
+    "image_filename": "b83ecd9cd7c74f3f94ebd1703480ecee.png",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Gordon Ramsay": {
+    "image_filename": "9028a19e929041a9b6d73795eb74923e.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Logan Paul": {
+    "image_filename": "7d9bee6595e14cfcb2d7c82e335f7db6.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Marques Brownlee": {
+    "image_filename": "84cb90b6868048eabf8c71f569e37d5b.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Albert Einstein": {
+    "image_filename": "d8971d70df8449d38da0ce29db7ac215.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Marie Curie": {
+    "image_filename": "bf6dc8a572454e2ca86399f1d86cec69.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Isaac Newton": {
+    "image_filename": "52b16c1f4001446ca03e2aa7e6e15475.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Nikola Tesla": {
+    "image_filename": "206857146d8d41a491eb96812695e96f.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Nelson Mandela": {
+    "image_filename": "aafa6852a9044ab6a44ab17143d40b50.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Barack Obama": {
+    "image_filename": "e2103784a2b443a6914548a583a519b0.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Mahatma Gandhi": {
+    "image_filename": "5c0e5c2f07144350b19dca459f165b38.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Pope Francis": {
+    "image_filename": "edc8aff5e39b442d893690c8b8059ca3.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Dalai Lama": {
+    "image_filename": null,
+    "status": "manual_review_required",
+    "candidates": []
+  },
+  "Stephen Hawking": {
+    "image_filename": "7dae42da73104693b77afe2f8b020b17.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Lloyd Cadena": {
+    "image_filename": "7ab6eec4881a4580ac8afe7116b0ff60.jpg",
+    "status": "verified",
+    "method": "exact_hog_match"
+  },
+  "Paul Mccartney": {
+    "image_filename": "6ddee2f69f78428ebb357b9d65acb6a9.jpg",
+    "status": "verified",
+    "method": "profile_save",
+    "updated_at": "2026-11-08T09:35:28.227741+00:00"
+  },
+  "Bretman Rock": {
+    "image_filename": "f185f63204614ce7b15634fcf18605fe.webp",
+    "status": "verified",
+    "method": "profile_save",
+    "updated_at": "2026-11-08T10:26:14.184474+00:00"
+  },
+  "P-C10C9E53": {
+    "image_filename": "79fff66f782540259b7067987fb3cd1a.jpg",
+    "status": "verified",
+    "method": "private_participant",
+    "updated_at": "2026-11-08T11:19:30.657452+00:00"
+  },
+  "P-BAEAE80F": {
+    "image_filename": "0226a65af58b45de9326848f6283e06f.jpg",
+    "status": "verified",
+    "method": "private_participant",
+    "updated_at": "2026-11-08T11:51:51.038958+00:00"
+  },
+  "P-7477DC8A": {
+    "image_filename": "fad5918e8c6742139d21961c875dfd3b.jpg",
+    "status": "verified",
+    "method": "private_participant",
+    "updated_at": "2026-11-09T10:46:41.969889+00:00"
+  },
+  "P-E007392B": {
+    "image_filename": "4757e779574f4b18b8d1343bfcedfae4.jpg",
+    "status": "verified",
+    "method": "private_participant",
+    "updated_at": "2026-11-09T11:02:43.244652+00:00"
+  },
+  "P-10D4706E": {
+    "image_filename": "cb7081b06be04e9f93929bda096bcbd1.jpg",
+    "status": "verified",
+    "method": "private_participant",
+    "updated_at": "2026-11-09T11:17:11.919380+00:00"
+  },
+  "P-E0B9BA76": {
+    "image_filename": "41a53752dcaa45bba254165ffdcabddf.jpg",
+    "status": "verified",
+    "method": "private_participant",
+    "updated_at": "2026-11-09T14:23:00.064932+00:00"
+  }
+}

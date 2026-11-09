@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>{% block title %}FacePersona — AI Research Studio{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <nav class="navbar" role="navigation" aria-label="Main Navigation">
+        <div class="nav-inner">
+            <a href="{{ url_for('home') }}" class="nav-brand" aria-label="FacePersona Intelligence Studio">
+                <span class="brand-logo-mark" aria-hidden="true">
+                    <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="1" y="1" width="24" height="24" rx="7" fill="url(#navBrandGrad)" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+                        <circle cx="8.5" cy="10" r="1.75" fill="#FFFFFF"/>
+                        <circle cx="17.5" cy="10" r="1.75" fill="#FFFFFF"/>
+                        <path d="M13 10V13.5" stroke="#FFFFFF" stroke-width="1.6" stroke-linecap="round"/>
+                        <path d="M8.5 16.5C10 18.2 16 18.2 17.5 16.5" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round"/>
+                        <circle cx="13" cy="5" r="1" fill="#FFFFFF" opacity="0.6"/>
+                        <line x1="8.5" y1="10" x2="13" y2="5" stroke="#FFFFFF" stroke-width="0.75" opacity="0.4" stroke-dasharray="1 1"/>
+                        <line x1="17.5" y1="10" x2="13" y2="5" stroke="#FFFFFF" stroke-width="0.75" opacity="0.4" stroke-dasharray="1 1"/>
+                        <defs>
+                            <linearGradient id="navBrandGrad" x1="1" y1="1" x2="25" y2="25" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#6C5CE7"/>
+                                <stop offset="1" stop-color="#159B91"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </span>
+                <span class="brand-text-wrap">
+                    <span class="brand-name">FacePersona</span>
+                    <span class="brand-studio-badge">Research Studio</span>
+                </span>
+            </a>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false" type="button">
+                <span class="nav-toggle-bar"></span>
+                <span class="nav-toggle-bar"></span>
+                <span class="nav-toggle-bar"></span>
+            </button>
+            <div class="nav-links" id="navLinks">
+                {% if researcher_nav %}
+                <a href="{{ url_for('index') }}" class="nav-link {% if request.endpoint == 'index' %}active{% endif %}">
+                    <span class="nav-link-dot" aria-hidden="true"></span>
+                    <span>Dashboard</span>
+                </a>
+                {% endif %}
+                <a href="{{ url_for('analyze') }}" class="nav-link {% if request.endpoint == 'analyze' %}active{% endif %}">
+                    <span class="nav-link-dot" aria-hidden="true"></span>
+                    <span>Analyze</span>
+                </a>
+                {% if researcher_nav %}
+                <a href="{{ url_for('subjects') }}" class="nav-link {% if request.endpoint in ('subjects', 'profile') %}active{% endif %}">
+                    <span class="nav-link-dot" aria-hidden="true"></span>
+                    <span>Subjects</span>
+                </a>
+                <a href="{{ url_for('researcher_participants') }}" class="nav-link {% if request.endpoint == 'researcher_participants' %}active{% endif %}">
+                    <span class="nav-link-dot" aria-hidden="true"></span>
+                    <span>Participants</span>
+                </a>
+                <a href="{{ url_for('insights') }}" class="nav-link {% if request.endpoint == 'insights' %}active{% endif %}">
+                    <span class="nav-link-dot" aria-hidden="true"></span>
+                    <span>Insights</span>
+                </a>
+                <form method="POST" action="{{ url_for('deauthorize_researcher') }}" class="nav-lock-form">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button type="submit" class="nav-link nav-lock-btn" title="Log out of researcher view">Log out</button>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+    <main class="main-content">{% block content %}{% endblock %}</main>
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <span class="footer-brand-title">FacePersona</span>
+                <span class="footer-brand-tag">Multimodal AI Personality Research</span>
+            </div>
+            <div class="footer-meta">
+                <span>Big Five (OCEAN) Analytical Framework</span>
+                <span class="footer-divider">·</span>
+                <span>OpenCV HOG × Claude AI × Scikit-Learn</span>
+                <span class="footer-divider">·</span>
+                <span>Capstone Project</span>
+                {% if not researcher_nav %}
+                <span class="footer-divider">·</span>
+                <a href="{{ url_for('researcher_login') }}" class="footer-researcher-link">Researcher Login</a>
+                {% endif %}
+            </div>
+        </div>
+    </footer>
+    <script>
+        function getCsrfToken() {
+            const meta = document.querySelector('meta[name="csrf-token"]');
+            return meta ? meta.getAttribute('content') : '';
+        }
+    </script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

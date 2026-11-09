@@ -1,0 +1,286 @@
+{% extends "base.html" %}
+{% block title %}Subjects — FacePersona{% endblock %}
+
+{% block content %}
+<div class="page-hero-sm">
+    <div class="page-hero-row">
+        <div>
+            <h1 class="page-title">Subjects</h1>
+            <p class="page-sub">
+                {% if is_authorized %}
+                Authorized Researcher Roster: <span id="subjectCount">{{ subjects|length }}</span> total (103 Research Baseline + {{ public_count }} Public Demonstration).
+                {% else %}
+                Session Assessments: <span id="subjectCount">{{ subjects|length }}</span> assessment(s) in this session.
+                {% endif %}
+            </p>
+        </div>
+        <div class="page-hero-actions">
+            {% if is_authorized %}
+            <button class="btn btn-ghost" id="retrainBtn">Retrain Model</button>
+            {% else %}
+            <button class="btn btn-ghost js-unlock-researcher-btn">Researcher Unlock</button>
+            {% endif %}
+            <a href="{{ url_for('analyze') }}" class="btn btn-primary">+ Add Subject</a>
+        </div>
+    </div>
+</div>
+
+{% if not is_authorized %}
+<div class="alert alert-blue" style="margin-bottom: 1.5rem;">
+    <div class="alert-icon">🔒</div>
+    <div class="alert-body">
+        <strong>Research Confidentiality Active:</strong> The 103 original research baseline dataset records are confidential under ethics guidelines. 
+        Aggregate statistical correlations, PCA variance, and model evaluation metrics are viewable on <a href="{{ url_for('insights') }}"><strong>Model Insights</strong></a>.
+        {% if subjects|length > 0 %}
+        Displaying {{ subjects|length }} demonstration assessment(s) conducted in this session below.
+        {% else %}
+        No assessments conducted in this session. You can evaluate any subject using the <a href="{{ url_for('analyze') }}"><strong>Analyze Tool</strong></a>.
+        {% endif %}
+        <button class="btn btn-sm btn-ghost js-unlock-researcher-btn" style="margin-left:10px">Unlock Researcher View</button>
+    </div>
+</div>
+{% endif %}
+
+{% if model_is_outdated %}
+<div class="alert alert-amber" style="margin-bottom: 1.5rem;">
+    <div class="alert-icon">⚠</div>
+    <div class="alert-body">
+        <strong>Model Outdated:</strong> {{ outdated_reason or 'A training subject was deleted. Model reflects data prior to deletion. Please retrain.' }}
+    </div>
+</div>
+{% endif %}
+
+{% if subjects %}
+<div class="search-bar-wrap">
+    <input type="text" id="subjectSearch" class="search-input" placeholder="🔍 Search subjects…">
+</div>
+
+<div class="subjects-table-wrap">
+    <table class="subjects-table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Dataset Origin</th>
+                <th>Face Embeddings</th>
+                <th>Personality Scored</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="subjectsTableBody">
+            {% for subject in subjects %}
+            <tr id="row-{{ loop.index }}" class="subject-row" data-name="{{ subject.name|lower }}">
+                <td class="row-num">{{ loop.index }}</td>
+                <td>
+                    <div class="subject-row-info">
+                        <div class="subject-avatar-sm">{{ subject.name[0] }}</div>
+                        {% if subject.has_personality %}
+                        <a href="{{ url_for('profile', name=subject.name) }}" class="subject-row-name subject-name-link">{{ subject.name }}</a>
+                        {% else %}
+                        <span class="subject-row-name">{{ subject.name }}</span>
+                        {% endif %}
+                    </div>
+                </td>
+                <td>
+                    {% if subject.is_research %}
+                    <span class="badge badge-purple" title="Protected Baseline Subject">🔒 Research Baseline</span>
+                    {% else %}
+                    <span class="badge badge-teal" title="Public Assessment">✓ Public Assessment</span>
+                    {% endif %}
+                </td>
+                <td><span class="badge badge-green">✓ Extracted</span></td>
+                <td>
+                    {% if subject.has_personality %}
+                    <span class="badge badge-green">✓ Scored</span>
+                    {% else %}
+                    <span class="badge badge-amber">⟳ Pending</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <div class="action-cell">
+                    {% if subject.has_personality %}
+                    <a href="{{ url_for('profile', name=subject.name) }}" class="btn btn-sm btn-ghost">View Profile</a>
+                    <a href="{{ url_for('researcher_computation', type='subject', id=subject.name) }}" class="btn btn-sm btn-ghost">Computation</a>
+                    {% endif %}
+                    {% if is_authorized %}
+                    <button class="btn-icon btn-danger-ghost js-delete-subject-btn"
+                            data-subject-name="{{ subject.name }}"
+                            data-row-idx="{{ loop.index }}"
+                            title="Remove"
+                            aria-label="Remove {{ subject.name }}">✕</button>
+                    {% endif %}
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div id="noResults" class="empty-state-sm" style="display:none">
+        <p>No subjects found matching your search.</p>
+    </div>
+</div>
+{% else %}
+<div class="empty-state">
+    <div class="empty-icon">◈</div>
+    <h3>No public demonstration assessments yet</h3>
+    <p>The 103 baseline research subjects are confidential under ethics protocols. Explore aggregate findings on Insights, or add a demonstration assessment using the Analyze tool.</p>
+    <div style="display:flex;gap:12px;justify-content:center;margin-top:1.25rem;flex-wrap:wrap">
+        <a href="{{ url_for('analyze') }}" class="btn btn-primary">+ Start Analysis</a>
+        <a href="{{ url_for('insights') }}" class="btn btn-ghost">View Model Insights</a>
+        <button class="btn btn-ghost js-unlock-researcher-btn">Researcher Unlock</button>
+    </div>
+</div>
+{% endif %}
+
+<div id="toast" class="toast hidden"></div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // 1. Safe Search Input Binding
+    const searchInput = document.getElementById('subjectSearch');
+    if (searchInput) {
+        searchInput.addEventListener('input', function(e) {
+            filterSubjects(e.target.value);
+        });
+    }
+
+    // 2. Safe Researcher Unlock Buttons
+    document.querySelectorAll('.js-unlock-researcher-btn').forEach(function(btn) {
+        btn.addEventListener('click', promptResearcherUnlock);
+    });
+
+    // 3. Safe Retrain Button
+    const retrainBtn = document.getElementById('retrainBtn');
+    if (retrainBtn) {
+        retrainBtn.addEventListener('click', trainModel);
+    }
+
+    // 4. Safe Event Delegation for Subject Deletion (immune to apostrophes & special characters)
+    const tableBody = document.getElementById('subjectsTableBody');
+    if (tableBody) {
+        tableBody.addEventListener('click', function(e) {
+            const delBtn = e.target.closest('.js-delete-subject-btn');
+            if (delBtn) {
+                const name = delBtn.getAttribute('data-subject-name');
+                const idx = delBtn.getAttribute('data-row-idx');
+                if (name) {
+                    deleteSubject(name, idx);
+                }
+            }
+        });
+    }
+});
+
+function filterSubjects(query) {
+    const rows = document.querySelectorAll('.subject-row');
+    const q = query.toLowerCase().trim();
+    let visible = 0;
+    rows.forEach(row => {
+        const name = row.getAttribute('data-name');
+        const match = !q || name.includes(q);
+        row.style.display = match ? '' : 'none';
+        if (match) visible++;
+    });
+    const cntEl = document.getElementById('subjectCount');
+    if (cntEl) cntEl.textContent = visible;
+    const noRes = document.getElementById('noResults');
+    if (noRes) noRes.style.display = visible === 0 ? '' : 'none';
+}
+
+function promptResearcherUnlock() {
+    const key = prompt('Enter Research Admin Key to unlock the full 103-subject research roster:');
+    if (key && key.trim()) {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '{{ url_for("authorize_researcher") }}';
+        const csrf = document.createElement('input');
+        csrf.type = 'hidden';
+        csrf.name = 'csrf_token';
+        csrf.value = getCsrfToken();
+        form.appendChild(csrf);
+        const kInput = document.createElement('input');
+        kInput.type = 'hidden';
+        kInput.name = 'admin_key';
+        kInput.value = key.trim();
+        form.appendChild(kInput);
+        document.body.appendChild(form);
+        form.submit();
+    }
+}
+
+function getAdminKey() {
+    let key = sessionStorage.getItem('facepersona_admin_key');
+    if (!key) {
+        key = prompt('Enter Research Admin Key to authorize this operation (or cancel and use manage_research.py on server):');
+        if (key && key.trim()) {
+            key = key.trim();
+            sessionStorage.setItem('facepersona_admin_key', key);
+        }
+    }
+    return key;
+}
+
+async function deleteSubject(name, idx) {
+    if (!confirm(`Remove "${name}" from the dataset?`)) return;
+    const adminKey = getAdminKey();
+    if (!adminKey) {
+        showToast('Administrative key required. Use manage_research.py on the server.', 'error');
+        return;
+    }
+    try {
+        const res = await fetch('/delete_subject', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCsrfToken(),
+                'X-Admin-Key': adminKey
+            },
+            body: JSON.stringify({ name })
+        });
+        const data = await res.json();
+        if (res.status === 403) {
+            sessionStorage.removeItem('facepersona_admin_key');
+            showToast('✗ ' + (data.error || data.message || 'Unauthorized: Invalid Research Admin Key.'), 'error');
+            return;
+        }
+        if (data.success) {
+            document.getElementById(`row-${idx}`)?.remove();
+            showToast('✓ ' + data.message, data.model_outdated ? 'info' : 'success');
+        } else {
+            showToast('✗ ' + data.error, 'error');
+        }
+    } catch(e) { showToast('Request failed.', 'error'); }
+}
+
+async function trainModel() {
+    const adminKey = getAdminKey();
+    if (!adminKey) {
+        showToast('Administrative key required. Use manage_research.py on the server.', 'error');
+        return;
+    }
+    const btn = document.getElementById('retrainBtn');
+    if (btn) { btn.disabled = true; btn.textContent = 'Training…'; }
+    showToast('Retraining model…', 'info');
+    try {
+        const res = await fetch('/retrain', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCsrfToken(),
+                'X-Admin-Key': adminKey
+            }
+        });
+        const data = await res.json();
+        if (res.status === 403) {
+            sessionStorage.removeItem('facepersona_admin_key');
+            showToast('✗ ' + (data.message || data.error || 'Unauthorized: Invalid Research Admin Key.'), 'error');
+            if (btn) { btn.disabled = false; btn.textContent = 'Retrain Model'; }
+            return;
+        }
+        showToast(data.success ? '✓ ' + data.message : '✗ ' + data.message, data.success ? 'success' : 'error');
+    } catch(e) { showToast('Request failed.', 'error'); }
+    if (btn) { btn.disabled = false; btn.textContent = 'Retrain Model'; }
+}
+</script>
+{% endblock %}

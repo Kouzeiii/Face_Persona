@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block title %}Participants &amp; Data — FacePersona{% endblock %}
+
+{% block content %}
+<div class="page-hero-sm">
+    <div class="page-hero-row">
+        <div>
+            <h1 class="page-title">Participants &amp; Data</h1>
+            <p class="page-sub">Private participants (BFI-10 + photo) and data export. Researcher-only — never shown publicly. Rows with ⚠ quality flags may be low-effort answers; review before including them in analysis.</p>
+        </div>
+    </div>
+</div>
+
+{% for category, message in messages %}
+<div class="alert {% if category == 'error' %}alert-red{% else %}alert-green{% endif %}" style="margin-bottom:1rem">
+    <div class="alert-body">{{ message }}</div>
+</div>
+{% endfor %}
+
+<div class="export-grid">
+    <div class="export-card">
+        <div class="export-num">{{ counts.baseline }}</div>
+        <div class="export-label">Research Baseline</div>
+        <a class="btn btn-ghost btn-sm" href="{{ url_for('researcher_export', dataset='baseline') }}">⬇ Download CSV</a>
+    </div>
+    <div class="export-card">
+        <div class="export-num">{{ counts.public }}</div>
+        <div class="export-label">Public Assessments</div>
+        <a class="btn btn-ghost btn-sm" href="{{ url_for('researcher_export', dataset='public') }}">⬇ Download CSV</a>
+    </div>
+    <div class="export-card">
+        <div class="export-num">{{ counts.private }}</div>
+        <div class="export-label">Private Participants</div>
+        <a class="btn btn-ghost btn-sm" href="{{ url_for('researcher_export', dataset='private') }}">⬇ Download CSV</a>
+    </div>
+</div>
+
+<h2 class="section-title" style="margin:2rem 0 0.75rem">Private Participants</h2>
+{% if rows %}
+<div class="subjects-table-wrap">
+    <table class="subjects-table participants-table">
+        <thead>
+            <tr>
+                <th>Participant ID</th>
+                <th>Date</th>
+                <th>Age</th>
+                <th>Questionnaire (BFI-10)<br><span class="th-sub">O · C · E · A · N</span></th>
+                <th>Facial Prediction<br><span class="th-sub">O · C · E · A · N</span></th>
+                <th>Background</th>
+                <th>Quality</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for r in rows %}
+            <tr>
+                <td><strong>{{ r.participant_id }}</strong></td>
+                <td>{{ r.date }}</td>
+                <td>{{ r.age_range }}</td>
+                <td class="score-cell">{% for t in trait_names %}<span class="score-chip" title="{{ t|capitalize }}">{{ ocean_letters[t] }} {{ r.scores[t] if r.scores[t] is not none else '—' }}</span>{% endfor %}</td>
+                <td class="score-cell">{% for t in trait_names %}<span class="score-chip muted" title="{{ t|capitalize }}">{{ ocean_letters[t] }} {{ r.pred[t] if r.pred[t] is not none else '—' }}</span>{% endfor %}</td>
+                <td class="bg-cell">{{ r.background or '—' }}</td>
+                <td class="flag-cell">{% if r.flags %}{% for f in r.flags %}<span class="quality-flag">⚠ {{ f }}</span>{% endfor %}{% else %}<span class="quality-ok">✓ OK</span>{% endif %}</td>
+                <td>
+                    <div class="action-cell">
+                        <a class="btn btn-ghost btn-sm" href="{{ url_for('researcher_computation', type='private', id=r.participant_id) }}">Computation</a>
+                        <form method="POST" action="{{ url_for('researcher_delete_participant') }}"
+                              onsubmit="return confirm('Delete {{ r.participant_id }} and their photo? This cannot be undone.');">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <input type="hidden" name="participant_id" value="{{ r.participant_id }}">
+                            <button type="submit" class="btn-icon btn-danger-ghost" title="Delete {{ r.participant_id }}" aria-label="Delete {{ r.participant_id }}">✕</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="empty-state-box">No private participants yet. They appear here after someone completes the 👤 Private Participant mode on the Analyze page.</div>
+{% endif %}
+{% endblock %}

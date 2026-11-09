@@ -1,0 +1,310 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — FacePersona{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="page-header-inner">
+        <div class="hero-tag">
+            <span class="hero-tag-dot"></span>
+            <span>Multimodal Psychometrics Studio · Big Five OCEAN</span>
+        </div>
+        <h1 class="hero-title">Personality Through<br><em>Facial Analysis</em></h1>
+        <p class="hero-sub">A scientific AI platform investigating empirical relationships between facial feature geometry and Big Five personality traits. Extract 512-D HOG embeddings, infer narrative psychometrics with Claude AI, and evaluate Random Forest cross-modal predictions.</p>
+        <div class="hero-actions">
+            <a href="{{ url_for('analyze') }}" class="btn btn-primary btn-glow">
+                <span class="btn-icon-prefix">✦</span>
+                <span>Start New Analysis</span>
+            </a>
+            <a href="{{ url_for('subjects') }}" class="btn btn-ghost">
+                <span>View Directory</span>
+                <span class="btn-arrow-suffix">→</span>
+            </a>
+        </div>
+    </div>
+    <div class="hero-visual">
+        <div class="constellation-card" id="constellationCard" aria-label="Interactive Big Five OCEAN Constellation">
+            <div class="constellation-header">
+                <span class="constellation-title">The Big Five Framework</span>
+                <span class="constellation-sub">Interactive OCEAN Trait Space</span>
+            </div>
+            <div class="constellation-wrap">
+                <svg class="constellation-svg" viewBox="0 0 320 280" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <!-- Ambient Glow -->
+                    <defs>
+                        <radialGradient id="constellationCoreGlow" cx="50%" cy="50%" r="50%">
+                            <stop offset="0%" stop-color="#6C5CE7" stop-opacity="0.18"/>
+                            <stop offset="100%" stop-color="#159B91" stop-opacity="0"/>
+                        </radialGradient>
+                    </defs>
+                    <circle cx="160" cy="140" r="110" fill="url(#constellationCoreGlow)"/>
+                    
+                    <!-- Constellation Polygons & Connections -->
+                    <polygon points="160,35 265,105 225,230 95,230 55,105" fill="none" stroke="rgba(108, 92, 231, 0.2)" stroke-width="1.5" stroke-dasharray="3 3"/>
+                    <polygon points="160,35 225,230 55,105 265,105 95,230" fill="none" stroke="rgba(21, 155, 145, 0.12)" stroke-width="1"/>
+                    
+                    <!-- Center Multimodal Axis -->
+                    <circle cx="160" cy="140" r="4" fill="#6C5CE7" opacity="0.75"/>
+                    <circle cx="160" cy="140" r="16" fill="none" stroke="#6C5CE7" stroke-width="1" opacity="0.25"/>
+                    <line x1="160" y1="140" x2="160" y2="35" stroke="rgba(108, 92, 231, 0.25)" stroke-width="1"/>
+                    <line x1="160" y1="140" x2="265" y2="105" stroke="rgba(21, 155, 145, 0.25)" stroke-width="1"/>
+                    <line x1="160" y1="140" x2="225" y2="230" stroke="rgba(225, 112, 85, 0.25)" stroke-width="1"/>
+                    <line x1="160" y1="140" x2="95" y2="230" stroke="rgba(0, 184, 148, 0.25)" stroke-width="1"/>
+                    <line x1="160" y1="140" x2="55" y2="105" stroke="rgba(214, 48, 49, 0.25)" stroke-width="1"/>
+                </svg>
+
+                <!-- Interactive Trait Nodes -->
+                {% set ocean_constellation = [
+                    ('node-o', 'O', 'Openness', '#6C5CE7', 'Curiosity, intellect, and creative openness', 'top: 15px; left: 50%; transform: translateX(-50%);'),
+                    ('node-c', 'C', 'Conscientiousness', '#159B91', 'Organization, discipline, and goal striving', 'top: 85px; right: 10px;'),
+                    ('node-e', 'E', 'Extraversion', '#E17055', 'Energy, sociability, and positive assertiveness', 'bottom: 25px; right: 40px;'),
+                    ('node-a', 'A', 'Agreeableness', '#00B894', 'Empathy, trust, and prosocial cooperation', 'bottom: 25px; left: 40px;'),
+                    ('node-n', 'N', 'Neuroticism', '#D63031', 'Emotional reactivity and mood sensitivity', 'top: 85px; left: 10px;')
+                ] %}
+
+                {% for nid, letter, label, color, desc, pos in ocean_constellation %}
+                <div class="constellation-node {{ nid }}" style="{{ pos }} --node-c: {{ color }};" data-trait="{{ label }}" data-desc="{{ desc }}" tabindex="0" role="button" aria-label="{{ label }}: {{ desc }}">
+                    <div class="node-halo"></div>
+                    <div class="node-letter">{{ letter }}</div>
+                    <div class="node-tooltip">
+                        <strong>{{ label }}</strong>
+                        <span>{{ desc }}</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="constellation-footer">
+                <span class="constellation-hint">Hover or tap nodes to explore Big Five dimensions</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="stats-row">
+    <div class="stat-card">
+        <div class="stat-header">
+            <span class="stat-icon-wrap" style="--icon-bg: var(--accent-light); --icon-c: var(--accent);">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </span>
+            <span class="stat-badge-tag">Ethical Protocol</span>
+        </div>
+        <div class="stat-num">{{ baseline_count }}</div>
+        <div class="stat-label">Research Baseline (Protected)</div>
+        <div class="stat-sub">Research dataset records</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-header">
+            <span class="stat-icon-wrap" style="--icon-bg: var(--teal-light); --icon-c: var(--teal);">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </span>
+            <span class="stat-badge-tag">Demonstration</span>
+        </div>
+        <div class="stat-num">{{ public_count }}</div>
+        <div class="stat-label">Public Assessments</div>
+        <div class="stat-sub">Evaluated in demonstration session</div>
+    </div>
+    <a class="stat-card stat-card-link" href="{{ url_for('researcher_participants') }}">
+        <div class="stat-header">
+            <span class="stat-icon-wrap" style="--icon-bg: rgba(91, 168, 158, 0.12); --icon-c: var(--teal);">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </span>
+            <span class="stat-badge-tag">BFI-10</span>
+        </div>
+        <div class="stat-num">{{ private_count }}</div>
+        <div class="stat-label">Private Participants</div>
+        <div class="stat-sub">View &amp; export →</div>
+    </a>
+    <div class="stat-card">
+        <div class="stat-header">
+            <span class="stat-icon-wrap" style="--icon-bg: {% if model_exists %}var(--green-light){% else %}var(--amber-light){% endif %}; --icon-c: {% if model_exists %}var(--green){% else %}var(--amber){% endif %};">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            </span>
+            <span class="stat-status-pill {% if model_exists %}active{% else %}pending{% endif %}">
+                <span class="pulse-dot"></span>
+                <span>{% if model_exists %}Operational{% else %}Pending{% endif %}</span>
+            </span>
+        </div>
+        <div class="stat-num {% if model_exists %}green{% else %}amber{% endif %}">
+            {% if model_exists %}Ready{% else %}Untrained{% endif %}
+        </div>
+        <div class="stat-label">ML Model Engine</div>
+        <div class="stat-sub">Random Forest Regression Pipeline</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-header">
+            <span class="stat-icon-wrap" style="--icon-bg: rgba(108, 92, 231, 0.08); --icon-c: var(--accent);">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            </span>
+            <span class="stat-badge-tag">HOG Feature Space</span>
+        </div>
+        <div class="stat-num">512</div>
+        <div class="stat-label">Face Embedding Vector</div>
+        <div class="stat-sub">Unit-normalized spatial gradient bins</div>
+    </div>
+</div>
+
+{% if model_is_outdated %}
+<div class="alert alert-amber">
+    <div class="alert-icon">⚠</div>
+    <div class="alert-body">
+        <strong>Model Outdated:</strong> {{ outdated_reason or 'A training subject was removed from the dataset. Predictions reflect the previous model state until retrained.' }}
+        <button class="btn btn-sm btn-amber" id="trainBtn" onclick="trainModel()">Retrain Model Now</button>
+    </div>
+</div>
+{% elif not model_exists and subject_count > 0 %}
+<div class="alert alert-amber">
+    <div class="alert-icon">⚠</div>
+    <div class="alert-body">
+        <strong>No trained model yet.</strong> You have {{ subject_count }} subject(s) in the dataset. Train the model to enable personality estimation from faces.
+        <button class="btn btn-sm btn-amber" id="trainBtn" onclick="trainModel()">Train Model Now</button>
+    </div>
+</div>
+{% endif %}
+
+{% if subject_count == 0 %}
+<div class="empty-state">
+    <div class="empty-icon">◈</div>
+    <h3>Public Demonstration Mode Active</h3>
+    <p>The 103 original baseline research subjects are confidential under ethics protocols. Explore aggregate metrics on Model Insights, or analyze your first public figure using the Analyze tool.</p>
+    <div style="display:flex;gap:12px;justify-content:center;margin-top:1rem;flex-wrap:wrap">
+        <a href="{{ url_for('analyze') }}" class="btn btn-primary">+ Start Analysis</a>
+        <a href="{{ url_for('insights') }}" class="btn btn-ghost">View Model Insights</a>
+    </div>
+</div>
+{% else %}
+
+<div class="section-header">
+    <h2 class="section-title">{% if is_authorized %}Recent Subjects{% else %}Recent Session Assessments{% endif %}</h2>
+    <a href="{{ url_for('subjects') }}" class="section-link">View all →</a>
+</div>
+
+<div class="subjects-grid">
+    {% for subject in subjects[-6:]|reverse %}
+    <div class="subject-card">
+        <div class="subject-avatar">{{ subject.name[0] }}</div>
+        <div class="subject-info">
+            <div class="subject-name">{{ subject.name }}</div>
+            <div class="subject-status {% if subject.has_personality %}complete{% else %}partial{% endif %}">
+                {% if subject.is_research %}🔒 Baseline record{% elif subject.has_personality %}✓ Fully analyzed{% else %}⟳ Partial data{% endif %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<div class="pipeline-section">
+    <div class="section-header-compact">
+        <div>
+            <h2 class="section-title">Multimodal Analytical Pipeline</h2>
+            <p class="section-subtitle">Dual-stream methodology: facial feature extraction paired with a personality reference (biography or questionnaire)</p>
+        </div>
+    </div>
+    <div class="pipeline-steps">
+        <div class="pipeline-step">
+            <div class="step-badge-wrap">
+                <span class="step-num">01</span>
+                <span class="step-modality-tag" style="--tag-c: var(--accent);">Subject Ingestion</span>
+            </div>
+            <div class="step-body">
+                <div class="step-title">Multimodal Ingestion</div>
+                <div class="step-desc">A clear face photo plus a biography (public figures) or a 10-item BFI-10 questionnaire (private participants). Photos are screened for explicit content, AI generation, and face clarity.</div>
+                <div class="step-meta">Photo + Biography or BFI-10</div>
+            </div>
+        </div>
+        <div class="pipeline-arrow" aria-hidden="true">→</div>
+        <div class="pipeline-step">
+            <div class="step-badge-wrap">
+                <span class="step-num">02</span>
+                <span class="step-modality-tag" style="--tag-c: var(--teal);">Computer Vision</span>
+            </div>
+            <div class="step-body">
+                <div class="step-title">Facial HOG Extraction</div>
+                <div class="step-desc">OpenCV Haar Cascade locates the face; the crop is resized to 128×128 px and HOG measures edge directions in 8×8 px cells. The first 512 HOG values are kept and normalized.</div>
+                <div class="step-meta">512 HOG Values (Normalized)</div>
+            </div>
+        </div>
+        <div class="pipeline-arrow" aria-hidden="true">→</div>
+        <div class="pipeline-step">
+            <div class="step-badge-wrap">
+                <span class="step-num">03</span>
+                <span class="step-modality-tag" style="--tag-c: #8E44AD;">Personality Reference</span>
+            </div>
+            <div class="step-body">
+                <div class="step-title">Reference OCEAN Scoring</div>
+                <div class="step-desc">Public figures: Claude AI rates the biography on each Big Five trait (0–100). Private participants: scores are computed from their own BFI-10 answers.</div>
+                <div class="step-meta">OCEAN Reference Scores (0–100)</div>
+            </div>
+        </div>
+        <div class="pipeline-arrow" aria-hidden="true">→</div>
+        <div class="pipeline-step">
+            <div class="step-badge-wrap">
+                <span class="step-num">04</span>
+                <span class="step-modality-tag" style="--tag-c: #27AE60;">Machine Learning</span>
+            </div>
+            <div class="step-body">
+                <div class="step-title">Cross-Modal ML Prediction</div>
+                <div class="step-desc">Features are scaled and reduced by PCA (10 components); a Random Forest (200 trees, trained on the 103-subject baseline) predicts OCEAN from the face, then compares it with the reference scores.</div>
+                <div class="step-meta">Random Forest + Agreement Check</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="toast" class="toast hidden"></div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function getAdminKey() {
+    let key = sessionStorage.getItem('facepersona_admin_key');
+    if (!key) {
+        key = prompt('Enter Research Admin Key to authorize model training (or cancel and use manage_research.py on server):');
+        if (key && key.trim()) {
+            key = key.trim();
+            sessionStorage.setItem('facepersona_admin_key', key);
+        }
+    }
+    return key;
+}
+
+async function trainModel() {
+    const adminKey = getAdminKey();
+    if (!adminKey) {
+        showToast('Administrative key required. Use manage_research.py on the server.', 'error');
+        return;
+    }
+    const btn = document.getElementById('trainBtn');
+    if (btn) {
+        btn.disabled = true;
+        btn.textContent = 'Training…';
+    }
+    showToast('Training model, please wait…', 'info');
+    try {
+        const res = await fetch('/retrain', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCsrfToken(),
+                'X-Admin-Key': adminKey
+            }
+        });
+        const data = await res.json();
+        if (res.status === 403) {
+            sessionStorage.removeItem('facepersona_admin_key');
+            showToast('✗ ' + (data.message || data.error || 'Unauthorized: Invalid Research Admin Key.'), 'error');
+            if (btn) { btn.disabled = false; btn.textContent = 'Train Model Now'; }
+            return;
+        }
+        if (data.success) {
+            showToast('✓ ' + data.message, 'success');
+            setTimeout(() => location.reload(), 1500);
+        } else {
+            showToast('✗ ' + data.message, 'error');
+            if (btn) { btn.disabled = false; btn.textContent = 'Train Model Now'; }
+        }
+    } catch (e) {
+        showToast('Request failed.', 'error');
+        if (btn) { btn.disabled = false; btn.textContent = 'Train Model Now'; }
+    }
+}
+</script>
+{% endblock %}

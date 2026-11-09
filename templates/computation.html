@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+{% block title %}Computation — FacePersona{% endblock %}
+
+{% block content %}
+<div class="page-hero-sm">
+    <a href="{{ url_for('researcher_participants') if kind == 'private' else url_for('subjects') }}" class="comp-back">← Back</a>
+    <h1 class="page-title">How the result was computed</h1>
+    {% if not error %}
+    <p class="page-sub"><strong>{{ meta.title }}</strong> · {{ meta.subtitle }}{% if meta.age_range %} · Age {{ meta.age_range }}{% endif %}{% if meta.date %} · {{ meta.date }}{% endif %}</p>
+    {% endif %}
+</div>
+
+{% if error %}
+<div class="empty-state-box">{{ error }}</div>
+{% else %}
+
+<!-- OVERVIEW -->
+<div class="comp-overview">
+    <div class="comp-step"><span class="comp-num">1</span><div><strong>Reference scores</strong><br><span>{% if bfi %}From the participant's BFI-10 answers{% else %}From the biography, scored by Claude AI{% endif %}</span></div></div>
+    <div class="comp-step"><span class="comp-num">2</span><div><strong>Face-based prediction</strong><br><span>Photo → HOG → Scaling → PCA → Random Forest</span></div></div>
+    <div class="comp-step"><span class="comp-num">3</span><div><strong>Comparison</strong><br><span>Difference between 1 and 2, and personality type</span></div></div>
+</div>
+
+<!-- PART 1 -->
+<h2 class="comp-h2">1. Reference scores (the "answer key")</h2>
+{% if bfi %}
+<p class="comp-p">Each answer is 1–5. Items marked <em>reverse</em> are flipped: <code>scored = 6 − answer</code>. Each trait has two items:
+<code>mean = (item A + item B) ÷ 2</code>, then <code>score = (mean − 1) ÷ 4 × 100</code>.</p>
+<div class="subjects-table-wrap">
+<table class="subjects-table comp-table">
+    <thead><tr><th>Trait</th><th>Item (I see myself as someone who…)</th><th>Answer</th><th>Reverse?</th><th>Scored</th><th>Mean</th><th>Score (0–100)</th></tr></thead>
+    <tbody>
+    {% for t in bfi.traits %}
+        {% for it in t['items'] %}
+        <tr>
+            {% if loop.first %}<td rowspan="{{ t['items']|length }}"><strong>{{ trait_labels[t.trait] }}</strong></td>{% endif %}
+            <td>{{ it.num }}. …{{ it.text }}</td>
+            <td>{{ it.answer }}</td>
+            <td>{% if it.reverse %}yes → 6 − {{ it.answer }}{% else %}no{% endif %}</td>
+            <td>{{ it.scored }}</td>
+            {% if loop.first %}
+            <td rowspan="{{ t['items']|length }}">({{ t['items'][0].scored }} + {{ t['items'][1].scored }}) ÷ 2 = <strong>{{ t.mean }}</strong></td>
+            <td rowspan="{{ t['items']|length }}">({{ t.mean }} − 1) ÷ 4 × 100 = <strong>{{ t.score }}</strong></td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+    {% endfor %}
+    </tbody>
+</table>
+</div>
+{% elif claude %}
+<p class="comp-p">For public figures, the reference scores are given by <strong>Claude AI</strong> after reading the biography{% if claude.profession %} (profession: {{ claude.profession }}){% endif %}. Claude is asked to rate each Big Five trait from 0 to 100 like a personality psychologist. This step is an AI judgment, not an arithmetic formula; its written reasoning is shown below.</p>
+<div class="subjects-table-wrap">
+<table class="subjects-table comp-table">
+    <thead><tr>{% for t in trait_names %}<th>{{ trait_labels[t] }}</th>{% endfor %}</tr></thead>
+    <tbody><tr>{% for t in trait_names %}<td><strong>{{ reference[t]|round(1) if reference and t in reference else '—' }}</strong></td>{% endfor %}</tr></tbody>
+</table>
+</div>
+{% if claude.reasoning %}<div class="consent-box comp-reasoning"><strong>Claude's reasoning:</strong> {{ claude.reasoning }}</div>{% endif %}
+{% endif %}
+
+<!-- PART 2 -->
+<h2 class="comp-h2">2. Face-based prediction</h2>
+{% if face %}
+<h3 class="comp-h3">Step A — Facial features (HOG)</h3>
+<p class="comp-p">The face is cropped, converted to grayscale and resized to 128×128 px. HOG measures the direction of edges in small 8×8 px cells and produces a vector of <strong>{{ face.hog.length }}</strong> numbers, normalized so its length is <code>‖x‖ = {{ face.hog.norm }}</code>.
+Range: {{ face.hog.min }} to {{ face.hog.max }}, mean {{ face.hog.mean }}.</p>
+<p class="comp-p comp-mono">First 10 values: {{ face.hog.first_values|join(', ') }}</p>
+
+<h3 class="comp-h3">Step B — Standard scaling</h3>
+<p class="comp-p">Each feature is compared with the average of the training data: <code>z = (x − mean) ÷ std</code>. Example for the first 5 features:</p>
+<div class="subjects-table-wrap">
+<table class="subjects-table comp-table">
+    <thead><tr><th>Feature</th><th>Value (x)</th><th>Training mean</th><th>Training std</th><th>Scaled (z)</th></tr></thead>
+    <tbody>
+    {% for r in face.scaling %}<tr><td>{{ r.feature }}</td><td>{{ r.raw }}</td><td>{{ r.mean }}</td><td>{{ r.std }}</td><td><strong>{{ r.scaled }}</strong></td></tr>{% endfor %}
+    </tbody>
+</table>
+</div>
+
+<h3 class="comp-h3">Step C — PCA (512 → {{ face.pca|length }} numbers)</h3>
+<p class="comp-p">PCA summarizes the 512 scaled features into {{ face.pca|length }} "principal components" that capture the main patterns of variation between faces (together {{ face.pca_total_variance }}% of the variation in the training faces).</p>
+<div class="subjects-table-wrap">
+<table class="subjects-table comp-table">
+    <thead><tr>{% for c in face.pca %}<th>{{ c.component }}<br><span class="th-sub">{{ c.variance }}% var.</span></th>{% endfor %}</tr></thead>
+    <tbody><tr>{% for c in face.pca %}<td>{{ c.value }}</td>{% endfor %}</tr></tbody>
+</table>
+</div>
+
+<h3 class="comp-h3">Step D — Random Forest ({{ face.n_trees }} decision trees)</h3>
+<p class="comp-p">Each of the {{ face.n_trees }} trees (max depth {{ face.max_depth }}) looks at the {{ face.pca|length }} PCA numbers and makes its own guess for each trait. The final prediction is the <strong>average of all {{ face.n_trees }} guesses</strong>: <code>prediction = (tree₁ + tree₂ + … + tree{{ face.n_trees }}) ÷ {{ face.n_trees }}</code>.</p>
+<div class="subjects-table-wrap">
+<table class="subjects-table comp-table">
+    <thead><tr><th>Trait</th><th>Tree 1, 2, 3 (examples)</th><th>Lowest tree</th><th>Median tree</th><th>Highest tree</th><th>Spread (std)</th><th>Final = average</th></tr></thead>
+    <tbody>
+    {% for r in face.trees %}
+    <tr><td><strong>{{ trait_labels[r.trait] }}</strong></td><td>{{ r.examples|join(', ') }}</td><td>{{ r.min }}</td><td>{{ r.median }}</td><td>{{ r.max }}</td><td>± {{ r.std }}</td><td><strong>{{ r.final }}</strong></td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+</div>
+{% if stored_pred %}
+<p class="comp-note">Saved prediction at the time of analysis:
+{% for t in trait_names %}{{ ocean_letters[t] }} {{ stored_pred[t]|round(1) if stored_pred[t] is not none else '—' }}{% if not loop.last %} · {% endif %}{% endfor %}.
+If the model was retrained since then, the recomputed values above use the current model and may differ slightly.</p>
+{% endif %}
+{% else %}
+<div class="empty-state-box">{{ face_error }}</div>
+{% endif %}
+
+<!-- PART 3 -->
+<h2 class="comp-h2">3. Comparison and personality type</h2>
+{% if comparison %}
+<p class="comp-p"><code>difference = | reference − prediction |</code>. Labels: ≤ 10 High Agreement · ≤ 20 Moderate · ≤ 35 Low · above 35 Divergent.
+The model's average error on unseen test subjects (MAE) is shown for context.</p>
+<div class="subjects-table-wrap">
+<table class="subjects-table comp-table">
+    <thead><tr><th>Trait</th><th>Reference</th><th>Face prediction</th><th>Difference</th><th>Alignment</th><th>Model test error (MAE)</th></tr></thead>
+    <tbody>
+    {% for r in comparison %}
+    <tr><td><strong>{{ trait_labels[r.trait] }}</strong></td><td>{{ r.reference }}</td><td>{{ r.predicted }}</td><td>{{ r.diff }}</td><td>{{ r.label }}</td>
+        <td>{% if trait_metrics.get(r.trait) %}± {{ trait_metrics[r.trait].mae }}{% else %}—{% endif %}</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+</div>
+{% endif %}
+
+{% if ptype %}
+<p class="comp-p">Personality type rule: find traits that are <strong>high (≥ {{ band_high }})</strong> or <strong>low (≤ {{ band_low }})</strong>, then pick the one furthest from the average of 50: <code>distance = | score − 50 |</code>.</p>
+<div class="subjects-table-wrap">
+<table class="subjects-table comp-table">
+    <thead><tr><th>Trait</th><th>Reference score</th><th>Band</th><th>Distance from 50</th></tr></thead>
+    <tbody>
+    {% for r in ptype.rows %}
+    <tr{% if r.trait == ptype.winner %} class="comp-winner"{% endif %}><td><strong>{{ trait_labels[r.trait] }}</strong></td><td>{{ r.score }}</td><td>{{ r.band }}</td><td>{{ r.distance }}{% if r.trait == ptype.winner %} ← strongest{% endif %}</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+</div>
+<div class="consent-box comp-reasoning">Result: <strong>{{ ptype.title }}</strong> ({{ ptype.summary }}).</div>
+{% endif %}
+
+{% endif %}
+{% endblock %}

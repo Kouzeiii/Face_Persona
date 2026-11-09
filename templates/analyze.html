@@ -1,0 +1,1528 @@
+{% extends "base.html" %}
+{% block title %}Analyze — FacePersona{% endblock %}
+
+{% block content %}
+<div class="page-hero-sm">
+    <h1 class="page-title">New Analysis</h1>
+    <p class="page-sub public-only">Upload or link a photo, paste a biography, and the system will validate and analyze personality traits.</p>
+    <p class="page-sub private-only">For ordinary participants: give consent, upload a photo, and answer 10 quick questions (about 2 minutes).</p>
+</div>
+
+{% if model_is_outdated %}
+<div class="alert alert-amber" style="margin-bottom:1.5rem">
+    <div class="alert-icon">⚠</div>
+    <div class="alert-body">
+        <strong>Model Needs Retraining:</strong> {{ outdated_reason }}
+        <button class="btn btn-sm btn-amber" style="margin-left:0.75rem" onclick="trainModel()">Retrain Model Now</button>
+    </div>
+</div>
+{% endif %}
+
+<div class="subject-mode-toggle" role="tablist" aria-label="Who are you analyzing?">
+    <span class="subject-mode-label">Who are you analyzing?</span>
+    <button type="button" class="subject-mode-btn active" id="modePublicBtn" onclick="setSubjectMode('public')">🌟 Public Figure</button>
+    <button type="button" class="subject-mode-btn" id="modePrivateBtn" onclick="setSubjectMode('private')">👤 Private Participant</button>
+</div>
+
+<div class="analyze-layout">
+    <div class="upload-panel">
+
+        <!-- PRIVATE STEP 1: Consent & basic info -->
+        <div class="step-block private-only">
+            <div class="step-badge">Step 1 — Consent &amp; Info</div>
+            <div class="consent-box">
+                <p class="consent-law">🛡️ <strong>Data Privacy Notice — Republic Act No. 10173 (Data Privacy Act of 2012)</strong></p>
+                <p>This is an academic study. Your <strong>photo, age range, and answers</strong> are collected only for this research,
+                stored securely by the researchers, and never shown publicly. <strong>Your name is not collected.</strong></p>
+                <p>Under RA 10173, you have the right to <strong>be informed</strong>, to <strong>access</strong> and <strong>correct</strong> your data,
+                to <strong>object</strong>, and to <strong>request deletion</strong> or <strong>withdraw your consent</strong> at any time. Just give your
+                Participant ID to the researchers. You may also file a complaint with the National Privacy Commission (NPC).</p>
+                <label class="consent-check">
+                    <input type="checkbox" id="privateConsent">
+                    <span>I am <strong>18 or older</strong>, I have read this notice, and I give my consent under <strong>RA 10173</strong> to take part.</span>
+                </label>
+            </div>
+            <div class="form-group" style="margin-top:1rem">
+                <label class="form-label">Age Range</label>
+                <select id="privateAgeRange" class="form-input">
+                    <option value="">— Select —</option>
+                    {% for ar in private_age_ranges %}
+                    <option value="{{ ar }}">{{ ar }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group" style="margin-top:1rem">
+                <label class="form-label">Short Background <span class="label-hint">(optional — e.g. "college student, likes music". Don't include your name.)</span></label>
+                <textarea id="privateBackground" class="form-textarea" rows="2" maxlength="{{ private_background_max }}" placeholder="Optional"></textarea>
+            </div>
+        </div>
+
+        <!-- STEP 1: Name -->
+        <div class="step-block public-only">
+            <div class="step-badge">Step 1 — Subject Info</div>
+            <div class="form-group">
+                <label class="form-label">Full Name</label>
+                <input type="text" id="nameInput" class="form-input" placeholder="e.g. Elon Musk">
+            </div>
+            <div class="form-group" style="margin-top:1rem">
+                <label class="form-label">Profession / Category</label>
+                <select id="professionSelect" class="form-input" onchange="onProfessionChange()">
+                    <option value="">— Select a category —</option>
+                    {% for cat in profession_categories %}
+                    <option value="{{ cat.value }}">{{ cat.label }}</option>
+                    {% endfor %}
+                </select>
+                <div id="otherProfessionWrap" style="display:none; margin-top:8px">
+                    <input type="text" id="otherProfessionInput" class="form-input" placeholder="e.g. Chef, Architect, Nurse…">
+                </div>
+                <div id="professionWarning" class="profession-warning hidden">Please select a profession category.</div>
+            </div>
+        </div>
+
+        <!-- STEP 2: Image -->
+        <div class="step-block" id="photoStepBlock">
+            <div class="step-badge">Step 2 — Photo</div>
+            <div class="consent-lock-note private-only" id="consentLockNote">🔒 Please tick the consent box in Step 1 first. Then you can upload your photo.</div>
+            <div class="photo-cooldown-note private-only hidden" id="photoCooldownNote" role="status" aria-live="polite"></div>
+            <div class="photo-attempts-note private-only hidden" id="photoAttemptsNote"></div>
+            <div class="image-source-tabs">
+                <button class="img-tab active public-only" onclick="switchImgTab('url')">🔗 From URL</button>
+                <button class="img-tab" onclick="switchImgTab('upload')">⊕ Upload</button>
+            </div>
+
+            <!-- URL Tab -->
+            <div id="imgTabUrl" class="img-tab-content active">
+                <div class="url-input-row">
+                    <input type="text" id="imageUrlInput" class="form-input" placeholder="https://en.wikipedia.org/wiki/Elon_Musk">
+                    <button class="btn btn-ghost btn-sm" id="loadUrlBtn" onclick="loadImageFromUrl()">Load</button>
+                </div>
+                <div class="url-hint">Paste a Wikipedia page URL or a direct image link. The system will fetch the image and extract the subject name.</div>
+                <div id="urlSourceInfo" class="source-info hidden"></div>
+            </div>
+
+            <!-- Upload Tab -->
+            <div id="imgTabUpload" class="img-tab-content">
+                <div class="upload-zone" id="uploadZone" onclick="openPhotoPicker()">
+                    <input type="file" id="photoInput" accept=".jpg,.jpeg,.png,.bmp,.webp" style="display:none" onchange="previewPhoto(this)">
+                    <div id="uploadPlaceholder">
+                        <div class="upload-icon">⊕</div>
+                        <div class="upload-text">Click to upload photo</div>
+                        <div class="upload-hint">JPG, PNG, WebP — clear face photo</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Preview (shared) with Scientific Portrait Frame -->
+            <div id="imagePreviewWrap" class="image-preview-wrap hidden">
+                <div class="photo-preview-frame">
+                    <span class="frame-bracket tl" aria-hidden="true"></span>
+                    <span class="frame-bracket tr" aria-hidden="true"></span>
+                    <span class="frame-bracket bl" aria-hidden="true"></span>
+                    <span class="frame-bracket br" aria-hidden="true"></span>
+                    <img id="photoPreview" class="photo-preview" alt="Subject Photo Preview">
+                    <button class="clear-img-btn" onclick="clearImage()" title="Remove image" aria-label="Remove image">✕</button>
+                </div>
+            </div>
+            <div id="photoCheckStatus" class="photo-check-status hidden" role="status" aria-live="polite">
+                <span class="spinner-sm"></span>
+                <span>Checking your photo (face, clarity, AI-generated, content)… this usually takes a few seconds.</span>
+            </div>
+        </div>
+
+        <div id="celebrityInfo" class="source-info hidden" style="margin:-0.5rem 0 1rem"></div>
+
+        <div id="moderationWarning" class="mod-warning-banner hidden">
+            <div class="mod-warning-icon" id="modWarningIcon">🚫</div>
+            <div class="mod-warning-content">
+                <div class="mod-warning-title" id="modWarningTitle">Photo Issue Detected</div>
+                <div class="mod-warning-msg" id="modWarningMsg"></div>
+            </div>
+            <button class="mod-warning-close" onclick="document.getElementById('moderationWarning').classList.add('hidden')">✕</button>
+        </div>
+
+        <!-- STEP 3: Biography -->
+        <div class="step-block public-only">
+            <div class="step-badge">Step 3 — Biography</div>
+            <div class="form-group">
+                <label class="form-label">Biography <span class="label-hint">(min. {{ min_biography_words }} words)</span></label>
+                <textarea id="bioInput" class="form-textarea" placeholder="Paste the biography or life story of the subject here…" rows="9"></textarea>
+                <div class="bio-footer">
+                    <span class="char-count" id="charCount">0 / {{ min_biography_words }} words</span>
+                    <button class="btn btn-ghost btn-sm" id="paraphraseBtn" onclick="paraphraseBio()" style="display:none">✦ Paraphrase</button>
+                </div>
+                <div id="paraphraseStatus" class="paraphrase-status hidden"></div>
+                <div class="copyright-warning">
+                    ⚠ Make sure the biography is in your own words. Do not directly copy from Wikipedia or other sources. Use the Paraphrase button to rewrite it automatically.
+                </div>
+            </div>
+        </div>
+
+        <!-- PRIVATE STEP 3: BFI-10 questionnaire -->
+        <div class="step-block private-only">
+            <div class="step-badge">Step 3 — Quick Questionnaire (10 items)</div>
+            <p class="bfi-intro">I see myself as someone who…</p>
+            <div class="bfi-scale-legend">
+                {% for label in bfi10_scale %}<span>{{ loop.index }} = {{ label }}</span>{% endfor %}
+            </div>
+            <div class="bfi-list">
+                {% for item in bfi10_items %}
+                {% set qi = loop.index0 %}
+                <div class="bfi-row" id="bfiRow{{ qi }}">
+                    <div class="bfi-q"><span class="bfi-num">{{ loop.index }}.</span> …{{ item }}</div>
+                    <div class="bfi-options">
+                        {% for v in range(1, 6) %}
+                        <label class="bfi-opt" title="{{ bfi10_scale[v-1] }}">
+                            <input type="radio" name="bfi{{ qi }}" value="{{ v }}"><span>{{ v }}</span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- STEP 4: Validate + Analyze -->
+        <div class="step-block">
+            <div class="step-badge"><span class="public-only">Step 4 — Validate &amp; Analyze</span><span class="private-only">Step 4 — Analyze</span></div>
+
+            <div class="validate-info public-only">
+                The system will first check if the name and biography match, then extract facial embeddings and analyze personality traits.
+            </div>
+
+            <div id="analysisErrorBanner" class="alert alert-red hidden" style="margin-top:1rem;margin-bottom:1rem">
+                <div class="alert-icon">⚠</div>
+                <div class="alert-body" id="analysisErrorMsg"></div>
+            </div>
+
+            <button class="btn btn-primary btn-full public-only" id="submitBtn" onclick="runValidateAndAnalyze()">
+                <span id="submitText">Validate & Analyze</span>
+            </button>
+            <button class="btn btn-primary btn-full private-only" id="privateSubmitBtn" onclick="runPrivateAnalyze()">
+                <span id="privateSubmitText">Analyze My Photo &amp; Answers</span>
+            </button>
+        </div>
+
+    </div>
+
+    <!-- RESULTS PANEL -->
+    <div class="results-panel" id="resultsPanel" style="display:none">
+        <div class="results-header">
+            <div>
+                <div class="results-name" id="resultsName"></div>
+                <div class="results-type" id="resultsType"></div>
+                <div class="results-sub" id="resultsSub">Dual-Pipeline Evaluation: AI Narrative Inference &amp; Facial ML Prediction</div>
+            </div>
+            <div class="results-tag">Analysis Complete</div>
+        </div>
+
+        <div id="validationBadge" class="validation-badge hidden"></div>
+        <div id="participantIdNote" class="consent-box hidden" style="margin-bottom:1rem"></div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('bio')" id="bioTab">✦ AI Biography Analysis</button>
+            <button class="tab" onclick="switchTab('est')" id="estTab">⬡ Facial ML Prediction</button>
+            <button class="tab" onclick="switchTab('corr')" id="corrTab" style="display:none">◈ Cross-Modal Alignment</button>
+        </div>
+
+        <div id="tabBio" class="tab-content active">
+            <div class="pipeline-source-badge">
+                <span class="source-pill purple" id="bioSourcePill">Claude AI Analysis</span>
+                <span class="source-text" id="bioSourceText">Scores derived from biographical narrative using Claude AI personality psychology inference</span>
+            </div>
+            <p class="results-note" id="bioReasoning"></p>
+            <div class="traits-list" id="bioTraits"></div>
+        </div>
+
+        <div id="tabEst" class="tab-content">
+            <div class="pipeline-source-badge">
+                <span class="source-pill teal">Facial ML Prediction</span>
+                <span class="source-text">Scores predicted from fresh 512-D facial HOG embeddings by the trained Random Forest model</span>
+            </div>
+            <div id="freshHogInfo" class="fresh-hog-info"></div>
+            <div class="traits-list" id="predTraits"></div>
+        </div>
+
+        <div id="tabCorr" class="tab-content">
+            <div class="pipeline-source-badge">
+                <span class="source-pill blue">Cross-Modal Alignment</span>
+                <span class="source-text">Comparison between independent biography-derived scores and facial ML predictions</span>
+            </div>
+            <div id="corrContent"></div>
+        </div>
+
+        <div class="ocean-display" id="oceanDisplay"></div>
+
+        <div class="results-actions">
+            <button class="btn btn-primary" onclick="startNewAssessment()">✦ Start New Assessment</button>
+            {% if researcher_nav %}
+            <button class="btn btn-ghost" onclick="trainModel()">Retrain Model (Admin)</button>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% if not model_exists %}
+<div class="alert alert-amber" style="margin-top:2rem">
+    <div class="alert-icon">⚠</div>
+    <div class="alert-body"><strong>No ML model trained yet.</strong> Biography scoring will work. Train from Dashboard after adding subjects.</div>
+</div>
+{% endif %}
+
+<div id="toast" class="toast hidden"></div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function escapeHtml(str) {
+    if (str === null || str === undefined) return '';
+    const div = document.createElement('div');
+    div.textContent = String(str);
+    return div.innerHTML;
+}
+
+const TRAIT_LABELS = { openness:'Openness', conscientiousness:'Conscientiousness', extraversion:'Extraversion', agreeableness:'Agreeableness', neuroticism:'Neuroticism' };
+const TRAIT_DESC = { openness:'Curiosity, creativity, openness to experience', conscientiousness:'Organization, dependability, self-discipline', extraversion:'Sociability, assertiveness, positive emotions', agreeableness:'Cooperation, trust, empathy toward others', neuroticism:'Emotional instability, anxiety, moodiness' };
+const OCEAN_COLORS = { openness:'#7C6FE0', conscientiousness:'#5BA89E', extraversion:'#E07C6F', agreeableness:'#6FAD6F', neuroticism:'#C49A4A' };
+
+let currentImageMode = 'url';
+let fetchedImagePath = null;
+let fetchedImageB64 = null;
+let nameAutoFilled = false;
+let professionAutoFilled = false;
+let lastRecognizedName = null;
+
+// ── Profession dropdown ──
+function onProfessionChange() {
+    const val = document.getElementById('professionSelect').value;
+    document.getElementById('otherProfessionWrap').style.display = val === 'other' ? '' : 'none';
+    document.getElementById('professionWarning').classList.add('hidden');
+    // Re-check photo if one is already loaded
+    if (fetchedImagePath) checkPhoto(fetchedImagePath);
+}
+
+function getProfession() {
+    return document.getElementById('professionSelect').value || 'other';
+}
+function getCustomProfession() {
+    return document.getElementById('otherProfessionInput').value.trim();
+}
+
+// ── Photo check (called right after photo loads) ──
+let photoCheckInProgress = false;
+
+function setPhotoCheckStatus(active) {
+    photoCheckInProgress = active;
+    document.getElementById('photoCheckStatus').classList.toggle('hidden', !active);
+}
+
+async function checkPhoto(imagePath) {
+    const profession = getProfession();
+    const customProfession = getCustomProfession();
+    hideModerationWarning();
+    setPhotoCheckStatus(true);
+
+    try {
+        const res = await fetch('/check_photo', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json', 'X-CSRFToken': getCsrfToken()},
+            body: JSON.stringify({ image_path: imagePath, profession, custom_profession: customProfession, mode: subjectMode })
+        });
+        const data = await res.json();
+        if (data.status === 'UNAVAILABLE' || !res.ok) {
+            showToast('Photo check service unavailable: ' + (data.error || 'Temporarily unavailable'), 'error');
+            return;
+        }
+        if (data.ok && data.ai_check_status === 'UNAVAILABLE') {
+            showToast('⚠ AI-image check could not run: ' + (data.ai_check_error || 'service unavailable'), 'error');
+        }
+        if (!data.ok) {
+            if (data.issue === 'explicit_content' || data.issue === 'ai_generated' || data.issue === 'no_face') {
+                clearImage();
+            }
+            showModerationWarning(data.issue, data.reason, data.no_face_category);
+            handlePhotoAttempts(data);
+        } else if (subjectMode === 'private') {
+            showAttemptsLeft(null);
+        }
+    } catch(e) {
+        showToast('Photo check error: ' + e.message, 'error');
+    } finally {
+        setPhotoCheckStatus(false);
+    }
+}
+
+// ── Private Participant: photo upload is locked until consent is given ──
+const PHOTO_MAX_ATTEMPTS = {{ private_photo_max_attempts }};
+let photoCooldownUntil = 0;
+let photoCooldownTimer = null;
+
+function photoCooldownLeft() {
+    return Math.max(0, Math.ceil((photoCooldownUntil - Date.now()) / 1000));
+}
+
+function isPhotoLocked() {
+    return subjectMode === 'private' && (!document.getElementById('privateConsent').checked || photoCooldownLeft() > 0);
+}
+
+function showAttemptsLeft(left) {
+    const note = document.getElementById('photoAttemptsNote');
+    if (left === null || left === undefined || left >= PHOTO_MAX_ATTEMPTS) { note.classList.add('hidden'); return; }
+    note.textContent = `⚠ Photo not accepted. You have ${left} more ${left === 1 ? 'try' : 'tries'} before a 1-minute wait.`;
+    note.classList.remove('hidden');
+}
+
+function startPhotoCooldown(seconds) {
+    if (!seconds || seconds <= 0) return;
+    photoCooldownUntil = Date.now() + seconds * 1000;
+    document.getElementById('photoAttemptsNote').classList.add('hidden');
+    const note = document.getElementById('photoCooldownNote');
+    const tick = () => {
+        const left = photoCooldownLeft();
+        if (left <= 0) {
+            clearInterval(photoCooldownTimer);
+            photoCooldownTimer = null;
+            note.classList.add('hidden');
+            updateConsentLock();
+            if (subjectMode === 'private') showToast('You can upload a photo again.', 'success');
+            return;
+        }
+        note.textContent = `⏳ Too many unsuccessful photos (${PHOTO_MAX_ATTEMPTS} tries). Please wait ${left}s before uploading again. Tip: use a clear, well-lit, front-facing photo of only you.`;
+        note.classList.remove('hidden');
+        updateConsentLock();
+    };
+    if (photoCooldownTimer) clearInterval(photoCooldownTimer);
+    tick();
+    photoCooldownTimer = setInterval(tick, 1000);
+}
+
+function handlePhotoAttempts(data) {
+    if (subjectMode !== 'private' || !data) return;
+    if (data.cooldown_seconds && data.cooldown_seconds > 0) {
+        startPhotoCooldown(data.cooldown_seconds);
+    } else if (data.attempts_left !== undefined) {
+        showAttemptsLeft(data.attempts_left);
+    }
+}
+
+function updateConsentLock() {
+    const locked = isPhotoLocked();
+    const noConsent = subjectMode === 'private' && !document.getElementById('privateConsent').checked;
+    document.getElementById('photoStepBlock').classList.toggle('photo-locked', locked);
+    document.getElementById('photoStepBlock').classList.toggle('photo-no-consent', noConsent);
+    document.getElementById('photoInput').disabled = locked;
+    const zone = document.getElementById('uploadZone');
+    zone.setAttribute('aria-disabled', locked ? 'true' : 'false');
+    zone.title = noConsent ? 'Tick the consent box in Step 1 first' : (locked ? 'Please wait before uploading again' : '');
+}
+
+function openPhotoPicker() {
+    if (isPhotoLocked()) {
+        if (photoCooldownLeft() > 0) {
+            showToast(`Please wait ${photoCooldownLeft()}s before uploading again.`, 'error');
+        } else {
+            showToast('Please tick the consent box in Step 1 first.', 'error');
+            document.getElementById('privateConsent').focus();
+        }
+        return;
+    }
+    document.getElementById('photoInput').click();
+}
+
+if ({{ private_photo_cooldown }} > 0) { startPhotoCooldown({{ private_photo_cooldown }}); }
+
+document.getElementById('privateConsent').addEventListener('change', function() {
+    // Unticking consent removes a photo that was already chosen
+    if (!this.checked && subjectMode === 'private' && (fetchedImagePath || document.getElementById('photoInput').files.length)) {
+        clearImage();
+        showToast('Photo removed because consent was unticked.', 'error');
+    }
+    updateConsentLock();
+});
+
+function showModerationWarning(issue, reason, category) {
+    const w = document.getElementById('moderationWarning');
+    const icon = document.getElementById('modWarningIcon');
+    const title = document.getElementById('modWarningTitle');
+    const msg = document.getElementById('modWarningMsg');
+
+    if (issue === 'explicit_content') {
+        icon.textContent = '🚫';
+        title.textContent = 'Inappropriate Image Detected';
+    } else if (issue === 'no_face') {
+        const faceTitles = {
+            blurred: ['🌫️', 'Photo Too Blurry'],
+            multiple_people: ['👥', 'More Than One Person'],
+            not_real_face: ['🗿', 'Not a Real Face'],
+        };
+        const t = faceTitles[category] || ['🙈', 'No Visible Face Detected'];
+        icon.textContent = t[0];
+        title.textContent = t[1];
+    } else if (issue === 'ai_generated') {
+        icon.textContent = '🤖';
+        title.textContent = 'AI-Generated / Non-Photo Image Detected';
+    } else {
+        icon.textContent = '⚠️';
+        title.textContent = 'Photo Doesn\'t Match Profession';
+    }
+    msg.textContent = reason;
+    w.classList.remove('hidden');
+    w.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function hideModerationWarning() {
+    document.getElementById('moderationWarning').classList.add('hidden');
+}
+
+// ── Celebrity recognition (AWS Rekognition) ──
+function showCelebrityInfo(html) {
+    const el = document.getElementById('celebrityInfo');
+    el.innerHTML = html;
+    el.classList.remove('hidden');
+}
+function hideCelebrityInfo() {
+    const el = document.getElementById('celebrityInfo');
+    el.classList.add('hidden');
+    el.innerHTML = '';
+}
+
+function applyRecognizedSubject(data) {
+    const nameInput = document.getElementById('nameInput');
+    const profSelect = document.getElementById('professionSelect');
+    const currentName = nameInput.value.trim();
+
+    // Fill the name if empty, previously auto-filled, or only URL-extracted
+    if (!currentName || nameAutoFilled) {
+        nameInput.value = data.name;
+        nameAutoFilled = true;
+    }
+    // Fill the profession if the user has not picked one yet
+    if (data.profession && (!profSelect.value || professionAutoFilled)) {
+        profSelect.value = data.profession;
+        professionAutoFilled = true;
+        document.getElementById('otherProfessionWrap').style.display = data.profession === 'other' ? '' : 'none';
+        document.getElementById('professionWarning').classList.add('hidden');
+    }
+
+    lastRecognizedName = data.name;
+    const nameDiffers = nameInput.value.trim().toLowerCase() !== data.name.toLowerCase();
+    let html = `<span class="src-ok">✓ Recognized public figure: <strong>${escapeHtml(data.name)}</strong> (${data.confidence}% confidence)</span>`;
+    if (nameDiffers) {
+        html += ` · <a href="#" onclick="useRecognizedName(event)">Use this name</a>`;
+    } else {
+        html += ` · Name${professionAutoFilled ? ' and category' : ''} auto-filled. Please double-check.`;
+    }
+    if (data.other_faces > 0) {
+        html += `<br><span class="src-name">Note: ${data.other_faces} other recognized face(s) in this photo. A single-person photo is recommended.</span>`;
+    }
+    showCelebrityInfo(html);
+}
+
+function useRecognizedName(event) {
+    event.preventDefault();
+    const name = lastRecognizedName;
+    if (!name) return;
+    document.getElementById('nameInput').value = name;
+    nameAutoFilled = true;
+    hideCelebrityInfo();
+    showToast(`✓ Name set to ${name}`, 'success');
+}
+
+function handleIdentifyResult(data) {
+    if (!data || !data.success || !data.service_enabled) { hideCelebrityInfo(); return; }
+    if (data.status === 'UNAVAILABLE') {
+        showCelebrityInfo('<span class="src-name">Celebrity recognition is temporarily unavailable. Please enter the name manually.</span>');
+        return;
+    }
+    if (data.recognized) {
+        applyRecognizedSubject(data);
+        showToast(`✓ Recognized: ${data.name}`, 'success');
+    } else {
+        showCelebrityInfo('<span class="src-name">Not recognized as a known public figure. Please enter the name manually.</span>');
+    }
+}
+
+async function identifyPhoto(body, isFile) {
+    showCelebrityInfo('<span class="src-name"><span class="spinner-sm"></span> Checking if this is a known public figure…</span>');
+    const opts = { method: 'POST', headers: {'X-CSRFToken': getCsrfToken()} };
+    if (isFile) {
+        opts.body = body;
+    } else {
+        opts.headers['Content-Type'] = 'application/json';
+        opts.body = JSON.stringify(body);
+    }
+    try {
+        const res = await fetch('/identify_photo', opts);
+        const data = await res.json();
+        if (!res.ok || !data.success) {
+            hideCelebrityInfo();
+            if (isFile && data && data.error) showToast('✗ ' + data.error, 'error');
+            return data;
+        }
+        handleIdentifyResult(data);
+        return data;
+    } catch (e) {
+        hideCelebrityInfo();
+        return null;
+    }
+}
+
+// ── Image source tabs ──
+function switchImgTab(tab) {
+    currentImageMode = tab;
+    document.querySelectorAll('.img-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.img-tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelector(`.img-tab[onclick="switchImgTab('${tab}')"]`).classList.add('active');
+    document.getElementById(`imgTab${tab.charAt(0).toUpperCase() + tab.slice(1)}`).classList.add('active');
+    clearImage();
+}
+
+async function loadImageFromUrl() {
+    const url = document.getElementById('imageUrlInput').value.trim();
+    if (!url) { showToast('Please enter a URL.', 'error'); return; }
+    const btn = document.getElementById('loadUrlBtn');
+    btn.disabled = true; btn.textContent = 'Loading…';
+    showToast('Fetching image from URL…', 'info');
+    try {
+        const res = await fetch('/fetch_image', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json', 'X-CSRFToken': getCsrfToken()},
+            body: JSON.stringify({url})
+        });
+        const data = await res.json();
+        if (!data.success) { showToast('✗ ' + data.error, 'error'); btn.disabled=false; btn.textContent='Load'; return; }
+
+        fetchedImagePath = data.upload_id || data.local_path;
+        fetchedImageB64 = data.image_b64;
+
+        document.getElementById('photoPreview').src = data.image_b64;
+        document.getElementById('imagePreviewWrap').classList.remove('hidden');
+
+        const srcInfo = document.getElementById('urlSourceInfo');
+        srcInfo.classList.remove('hidden');
+        srcInfo.innerHTML = `<span class="src-ok">✓ Image loaded from URL</span>`;
+
+        if (data.extracted_name) {
+            const nameInput = document.getElementById('nameInput');
+            if (!nameInput.value.trim()) {
+                nameInput.value = data.extracted_name;
+                srcInfo.innerHTML += ` · <span class="src-name">Name extracted: <strong>${escapeHtml(data.extracted_name)}</strong></span>`;
+            }
+        }
+
+        showToast('✓ Image loaded! Checking photo…', 'success');
+        // URL-extracted names count as auto-filled so a recognized name can replace them
+        if (data.extracted_name && document.getElementById('nameInput').value.trim() === data.extracted_name) {
+            nameAutoFilled = true;
+        }
+        // ── Recognize public figure (auto-fill name/profession), then check photo ──
+        await identifyPhoto({ upload_id: fetchedImagePath }, false);
+        await checkPhoto(fetchedImagePath);
+
+    } catch(e) { showToast('Request failed: ' + e.message, 'error'); }
+    btn.disabled=false; btn.textContent='Load';
+}
+
+function previewPhoto(input) {
+    if (isPhotoLocked()) {
+        input.value = '';
+        showToast(photoCooldownLeft() > 0 ? `Please wait ${photoCooldownLeft()}s before uploading again.`
+                                          : 'Please tick the consent box in Step 1 first.', 'error');
+        return;
+    }
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+        document.getElementById('photoPreview').src = e.target.result;
+        document.getElementById('imagePreviewWrap').classList.remove('hidden');
+        fetchedImageB64 = e.target.result.split(',')[1];
+    };
+    reader.readAsDataURL(file);
+
+    // Upload immediately so the photo can be recognized and checked before submit.
+    // The returned upload_id is reused by /check_photo and /analyze (no second upload).
+    (async () => {
+        setPhotoCheckStatus(true);
+        const fd = new FormData();
+        fd.append('photo', file);
+        let data;
+        if (subjectMode === 'private') {
+            // Private participants are never sent to celebrity recognition
+            fd.append('skip_recognition', '1');
+            fd.append('consent', document.getElementById('privateConsent').checked ? 'true' : 'false');
+            try {
+                const r = await fetch('/identify_photo', { method: 'POST', headers: {'X-CSRFToken': getCsrfToken()}, body: fd });
+                data = await r.json();
+                if (!r.ok || !data.success) {
+                    setPhotoCheckStatus(false); clearImage();
+                    if (data && data.cooldown_seconds) startPhotoCooldown(data.cooldown_seconds);
+                    showToast('✗ ' + ((data && data.error) || 'Upload failed.'), 'error');
+                    return;
+                }
+            } catch (e) { setPhotoCheckStatus(false); showToast('Upload failed: ' + e.message, 'error'); return; }
+        } else {
+            data = await identifyPhoto(fd, true);
+        }
+        // Ignore stale responses if the user picked another file meanwhile
+        if (input.files[0] !== file) return;
+        if (data && data.success && data.upload_id) {
+            fetchedImagePath = data.upload_id;
+            await checkPhoto(fetchedImagePath);
+        } else {
+            setPhotoCheckStatus(false);
+        }
+    })();
+}
+
+const MIN_BIOGRAPHY_WORDS = {{ min_biography_words|tojson }};
+let isSubmitting = false;
+
+function countWords(str) {
+    if (!str) return 0;
+    const cleaned = str.replace(/https?:\/\/\S+/g, '');
+    const matches = cleaned.match(/\b[a-zA-Z0-9_\'-]+\b/g);
+    return matches ? matches.length : 0;
+}
+
+function showAnalysisError(msg) {
+    const banner = document.getElementById('analysisErrorBanner');
+    const txt = document.getElementById('analysisErrorMsg');
+    if (banner && txt) {
+        txt.textContent = msg;
+        banner.classList.remove('hidden');
+        banner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+}
+
+function hideAnalysisError() {
+    const banner = document.getElementById('analysisErrorBanner');
+    if (banner) banner.classList.add('hidden');
+}
+
+function clearImage() {
+    document.getElementById('imagePreviewWrap').classList.add('hidden');
+    document.getElementById('photoPreview').src = '';
+    document.getElementById('photoInput').value = '';
+    document.getElementById('imageUrlInput').value = '';
+    document.getElementById('urlSourceInfo').classList.add('hidden');
+    document.getElementById('urlSourceInfo').innerHTML = '';
+    hideModerationWarning();
+    hideAnalysisError();
+    hideCelebrityInfo();
+    setPhotoCheckStatus(false);
+    fetchedImagePath = null;
+    fetchedImageB64 = null;
+}
+
+document.getElementById('nameInput').addEventListener('input', () => { nameAutoFilled = false; });
+document.getElementById('professionSelect').addEventListener('change', () => { professionAutoFilled = false; });
+
+document.getElementById('bioInput').addEventListener('input', function() {
+    const words = countWords(this.value);
+    const el = document.getElementById('charCount');
+    el.textContent = `${words} / ${MIN_BIOGRAPHY_WORDS} words`;
+    el.style.color = words < MIN_BIOGRAPHY_WORDS ? '#C49A4A' : '#6FAD6F';
+    document.getElementById('paraphraseBtn').style.display = words >= MIN_BIOGRAPHY_WORDS ? '' : 'none';
+});
+
+async function paraphraseBio() {
+    const name = document.getElementById('nameInput').value.trim();
+    const bio = document.getElementById('bioInput').value.trim();
+    if (!name) { showToast('Enter the subject name first.', 'error'); return; }
+    if (!bio) { showToast('Enter a biography first.', 'error'); return; }
+    const words = countWords(bio);
+    if (words < MIN_BIOGRAPHY_WORDS) {
+        showToast(`Biography is too short (${words} words). Minimum is ${MIN_BIOGRAPHY_WORDS} words before paraphrasing.`, 'error');
+        return;
+    }
+    const btn = document.getElementById('paraphraseBtn');
+    btn.disabled = true; btn.textContent = 'Paraphrasing…';
+    const status = document.getElementById('paraphraseStatus');
+    status.classList.remove('hidden');
+    status.innerHTML = '<span class="para-loading">✦ Paraphrasing biography via AI…</span>';
+    showToast('Paraphrasing biography…', 'info');
+    try {
+        const res = await fetch('/paraphrase', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json', 'X-CSRFToken': getCsrfToken()},
+            body: JSON.stringify({name, biography: bio})
+        });
+        const data = await res.json();
+        if (data.success) {
+            document.getElementById('bioInput').value = data.paraphrased;
+            const newWords = countWords(data.paraphrased);
+            document.getElementById('charCount').textContent = `${newWords} / ${MIN_BIOGRAPHY_WORDS} words`;
+            document.getElementById('charCount').style.color = '#6FAD6F';
+            status.innerHTML = '<span class="para-ok">✓ Biography has been paraphrased — original text replaced.</span>';
+            showToast('✓ Biography paraphrased!', 'success');
+        } else {
+            status.innerHTML = `<span class="para-err">✗ ${escapeHtml(data.error)}</span>`;
+            showToast('✗ ' + data.error, 'error');
+        }
+    } catch(e) {
+        status.innerHTML = '<span class="para-err">✗ Request failed.</span>';
+        showToast('Request failed.', 'error');
+    }
+    btn.disabled=false; btn.textContent='✦ Paraphrase';
+}
+
+async function runValidateAndAnalyze() {
+    if (isSubmitting) return;
+    if (photoCheckInProgress) { showToast('Please wait — the photo is still being checked.', 'error'); return; }
+
+    const name = document.getElementById('nameInput').value.trim();
+    const bio = document.getElementById('bioInput').value.trim();
+    const photoFile = document.getElementById('photoInput').files[0];
+
+    hideAnalysisError();
+
+    if (!name) { showToast('Please enter a name.', 'error'); showAnalysisError('Subject name is required.'); return; }
+    if (!bio) { showToast('Please enter a biography.', 'error'); showAnalysisError('Biography is required.'); return; }
+
+    const profession = getProfession();
+    if (!profession) {
+        document.getElementById('professionWarning').classList.remove('hidden');
+        showToast('Please select a profession category.', 'error');
+        showAnalysisError('Please select a profession category.');
+        return;
+    }
+
+    // If the uploaded file already reached the server (via /identify_photo), reuse its upload_id
+    const hasServerUpload = currentImageMode === 'upload' && photoFile && fetchedImagePath;
+    const hasUpload = currentImageMode === 'upload' && photoFile && !hasServerUpload;
+    const hasUrl = (currentImageMode === 'url' && fetchedImagePath) || hasServerUpload;
+    if (!hasUpload && !hasUrl) {
+        showToast('Please load or upload a photo.', 'error');
+        showAnalysisError('Please provide a photo (upload image file or load via URL).');
+        return;
+    }
+
+    const words = countWords(bio);
+    if (words < MIN_BIOGRAPHY_WORDS) {
+        showToast(`Biography is too short (${words}/${MIN_BIOGRAPHY_WORDS} words).`, 'error');
+        showAnalysisError(`Biography is too short (${words} words entered). The minimum requirement is ${MIN_BIOGRAPHY_WORDS} meaningful words.`);
+        const bioInput = document.getElementById('bioInput');
+        bioInput.style.borderColor = '#E07C6F';
+        setTimeout(() => bioInput.style.borderColor = '', 3500);
+        bioInput.focus();
+        return;
+    }
+
+    const btn = document.getElementById('submitBtn');
+    const txt = document.getElementById('submitText');
+    isSubmitting = true;
+    btn.disabled = true;
+
+    txt.innerHTML = '<span class="spinner-sm"></span> Validating…';
+    showToast('Checking if name and biography match…', 'info');
+
+    try {
+        const valRes = await fetch('/validate', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json', 'X-CSRFToken': getCsrfToken()},
+            body: JSON.stringify({ name, biography: bio })
+        });
+        const valData = await valRes.json();
+
+        const badge = document.getElementById('validationBadge');
+        badge.classList.remove('hidden');
+        document.getElementById('resultsPanel').style.display = 'block';
+        document.getElementById('resultsName').textContent = name;
+        document.getElementById('resultsType').textContent = '';
+
+        if (!valRes.ok || valData.status === 'UNAVAILABLE' || !valData.success) {
+            badge.className = 'validation-badge mismatch';
+            badge.style.background = 'rgba(235, 87, 87, 0.15)';
+            badge.style.borderColor = 'rgba(235, 87, 87, 0.4)';
+            badge.style.color = '#ff6b6b';
+            const errMsg = valData.error || valData.reason || 'Verification service is temporarily unavailable.';
+            badge.innerHTML = `<span>⚠ Verification Unavailable</span><span class="val-reason">${escapeHtml(errMsg)}</span>`;
+            document.querySelectorAll('.tab, .tab-content, #oceanDisplay, .results-actions').forEach(el => el.style.display = 'none');
+            showToast('⚠ Verification service unavailable: ' + errMsg, 'error');
+            showAnalysisError('Validation error: ' + errMsg);
+            btn.disabled = false;
+            txt.textContent = 'Validate & Analyze';
+            isSubmitting = false;
+            document.getElementById('resultsPanel').scrollIntoView({ behavior: 'smooth' });
+            return;
+        }
+
+        if (!valData.is_match) {
+            badge.className = 'validation-badge mismatch';
+            badge.style.background = '';
+            badge.style.borderColor = '';
+            badge.style.color = '';
+            badge.innerHTML = `<span>⚠ Mismatch Detected</span><span class="val-reason">${escapeHtml(valData.reason)}</span>`;
+            document.querySelectorAll('.tab, .tab-content, #oceanDisplay, .results-actions').forEach(el => el.style.display = 'none');
+            showToast('⚠ Biography does not match the subject name!', 'error');
+            showAnalysisError('Biography mismatch: ' + valData.reason);
+            btn.disabled = false;
+            txt.textContent = 'Validate & Analyze';
+            isSubmitting = false;
+            document.getElementById('resultsPanel').scrollIntoView({ behavior: 'smooth' });
+            return;
+        }
+
+        badge.className = 'validation-badge match';
+        badge.style.background = '';
+        badge.style.borderColor = '';
+        badge.style.color = '';
+        badge.innerHTML = `<span>✓ Match Confirmed</span><span class="val-reason">${escapeHtml(valData.reason)}</span>`;
+
+        txt.innerHTML = '<span class="spinner-sm"></span> Analyzing personality…';
+        showToast('✓ Match confirmed! Analyzing personality & extracting HOG features…', 'info');
+
+        const customProfession = getCustomProfession();
+        const formData = new FormData();
+        formData.append('name', name);
+        formData.append('biography', bio);
+        formData.append('profession', profession);
+        formData.append('custom_profession', customProfession);
+        formData.append('csrf_token', getCsrfToken());
+        if (hasUpload) {
+            formData.append('photo', photoFile);
+        } else {
+            formData.append('image_url_path', fetchedImagePath);
+            formData.append('upload_id', fetchedImagePath);
+        }
+
+        const res = await fetch('/analyze', {
+            method: 'POST',
+            headers: {'X-CSRFToken': getCsrfToken()},
+            body: formData
+        });
+        const data = await res.json();
+
+        if (!data.success) {
+            document.getElementById('resultsPanel').style.display = 'none';
+            document.getElementById('validationBadge').classList.add('hidden');
+            if (data.moderation_flag) {
+                clearImage();
+                showModerationWarning('explicit_content', data.error);
+                showAnalysisError(data.error);
+            } else if (data.no_face) {
+                clearImage();
+                showModerationWarning('no_face', data.error, data.no_face_category);
+                showAnalysisError(data.error);
+            } else if (data.ai_generated) {
+                clearImage();
+                showModerationWarning('ai_generated', data.error);
+                showAnalysisError(data.error);
+            } else if (data.duplicate) {
+                showToast('⚠ ' + data.error, 'error');
+                showAnalysisError(data.error);
+                document.getElementById('nameInput').style.borderColor = '#E07C6F';
+                setTimeout(() => document.getElementById('nameInput').style.borderColor = '', 3500);
+            } else if (data.status === 'UNAVAILABLE' || res.status === 503) {
+                showToast('⚠ Service Unavailable: ' + data.error, 'error');
+                showAnalysisError('Service unavailable: ' + data.error);
+            } else {
+                showToast('✗ ' + data.error, 'error');
+                showAnalysisError(data.error);
+            }
+            btn.disabled = false;
+            txt.textContent = 'Validate & Analyze';
+            isSubmitting = false;
+            return;
+        }
+
+        renderResults(data);
+        lockAssessment(data);
+        showToast('✓ Analysis complete & photo locked!', 'success');
+        isSubmitting = false;
+
+    } catch(e) {
+        showToast('Request failed: ' + e.message, 'error');
+        showAnalysisError('Network request failed: ' + e.message);
+        btn.disabled = false;
+        txt.textContent = 'Validate & Analyze';
+        isSubmitting = false;
+    }
+}
+
+function lockAssessment(data) {
+    // 1. Hide image source tabs
+    const imgTabs = document.querySelector('.img-tabs');
+    if (imgTabs) imgTabs.style.display = 'none';
+    const tabUrl = document.getElementById('imgTabUrl');
+    if (tabUrl) tabUrl.style.display = 'none';
+    const tabUpload = document.getElementById('imgTabUpload');
+    if (tabUpload) tabUpload.style.display = 'none';
+
+    // 2. Hide image clear button
+    const clearBtn = document.querySelector('.clear-img-btn');
+    if (clearBtn) clearBtn.style.display = 'none';
+
+    // 3. Attach photo lock badge to preview
+    let lockBadge = document.getElementById('photoLockBadge');
+    if (!lockBadge) {
+        lockBadge = document.createElement('div');
+        lockBadge.id = 'photoLockBadge';
+        lockBadge.className = 'photo-lock-badge';
+        const previewWrap = document.getElementById('imagePreviewWrap');
+        if (previewWrap) previewWrap.appendChild(lockBadge);
+    }
+    lockBadge.innerHTML = '<span>🔒</span> Photo Locked to Assessment';
+    lockBadge.style.display = 'flex';
+
+    // 4. Lock form inputs
+    const nameInput = document.getElementById('nameInput');
+    if (nameInput) nameInput.readOnly = true;
+    const profSelect = document.getElementById('professionSelect');
+    if (profSelect) profSelect.disabled = true;
+    const otherProf = document.getElementById('otherProfessionInput');
+    if (otherProf) otherProf.readOnly = true;
+    const bioInput = document.getElementById('bioInput');
+    if (bioInput) bioInput.readOnly = true;
+    const paraphraseBtn = document.getElementById('paraphraseBtn');
+    if (paraphraseBtn) paraphraseBtn.style.display = 'none';
+
+    // 5. Hide submit button and show locked banner
+    const submitBtn = document.getElementById('submitBtn');
+    if (submitBtn) submitBtn.style.display = 'none';
+
+    let lockedNotice = document.getElementById('assessmentLockedNotice');
+    if (!lockedNotice) {
+        lockedNotice = document.createElement('div');
+        lockedNotice.id = 'assessmentLockedNotice';
+        lockedNotice.className = 'assessment-locked-banner';
+        const step4 = submitBtn ? submitBtn.parentElement : null;
+        if (step4) step4.appendChild(lockedNotice);
+    }
+    lockedNotice.innerHTML = `
+        <div class="locked-icon">🔒</div>
+        <div class="locked-text">
+            <strong>Assessment Completed &amp; Photo Locked</strong>
+            <p>This photo is permanently associated with this assessment record. To analyze a different photo or subject, start a new assessment below.</p>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="startNewAssessment()">✦ Start New Assessment</button>
+    `;
+    lockedNotice.style.display = 'flex';
+}
+
+function startNewAssessment() {
+    // 1. Restore image source tabs
+    const imgTabs = document.querySelector('.img-tabs');
+    if (imgTabs) imgTabs.style.display = '';
+    const tabUrl = document.getElementById('imgTabUrl');
+    if (tabUrl) tabUrl.style.display = '';
+    const tabUpload = document.getElementById('imgTabUpload');
+    if (tabUpload) tabUpload.style.display = '';
+
+    // 2. Restore clear button
+    const clearBtn = document.querySelector('.clear-img-btn');
+    if (clearBtn) clearBtn.style.display = '';
+
+    // 3. Remove photo lock badge
+    const lockBadge = document.getElementById('photoLockBadge');
+    if (lockBadge) lockBadge.style.display = 'none';
+
+    // 4. Unlock form inputs
+    const nameInput = document.getElementById('nameInput');
+    if (nameInput) { nameInput.readOnly = false; nameInput.value = ''; }
+    const profSelect = document.getElementById('professionSelect');
+    if (profSelect) { profSelect.disabled = false; profSelect.value = 'other'; }
+    const otherProf = document.getElementById('otherProfessionInput');
+    if (otherProf) { otherProf.readOnly = false; otherProf.value = ''; }
+    document.getElementById('otherProfessionWrap').style.display = 'none';
+    const bioInput = document.getElementById('bioInput');
+    if (bioInput) { bioInput.readOnly = false; bioInput.value = ''; }
+
+    // 5. Reset word count
+    const charCount = document.getElementById('charCount');
+    if (charCount) {
+        charCount.textContent = `0 / ${MIN_BIOGRAPHY_WORDS} words`;
+        charCount.style.color = '#C49A4A';
+    }
+    const paraphraseBtn = document.getElementById('paraphraseBtn');
+    if (paraphraseBtn) paraphraseBtn.style.display = 'none';
+    const paraphraseStatus = document.getElementById('paraphraseStatus');
+    if (paraphraseStatus) { paraphraseStatus.classList.add('hidden'); paraphraseStatus.innerHTML = ''; }
+
+    // 6. Clear image preview and inputs
+    clearImage();
+
+    // 7. Hide and clear results panel & validation badge
+    document.getElementById('resultsPanel').style.display = 'none';
+    const validationBadge = document.getElementById('validationBadge');
+    if (validationBadge) {
+        validationBadge.classList.add('hidden');
+        validationBadge.innerHTML = '';
+    }
+
+    // 8. Restore submit button and hide locked notice
+    const lockedNotice = document.getElementById('assessmentLockedNotice');
+    if (lockedNotice) lockedNotice.style.display = 'none';
+    const submitBtn = document.getElementById('submitBtn');
+    if (submitBtn) {
+        submitBtn.style.display = '';
+        submitBtn.disabled = false;
+        const txt = document.getElementById('submitText');
+        if (txt) txt.textContent = 'Validate & Analyze';
+    }
+
+    // 9. Hide error banner and reset private participant form
+    hideAnalysisError();
+    resetPrivateForm();
+
+    // 10. Scroll smoothly to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    showToast('Ready for new assessment.', 'info');
+}
+
+function resetForm() {
+    startNewAssessment();
+}
+
+let lastResultData = null;
+
+// ── Subject mode: Public Figure vs Private Participant ──
+let subjectMode = 'public';
+let questionnaireStartedAt = null;
+document.addEventListener('change', (e) => {
+    if (e.target && e.target.matches && e.target.matches('.bfi-opt input') && questionnaireStartedAt === null) {
+        questionnaireStartedAt = Date.now();
+    }
+});
+
+function setSubjectMode(mode) {
+    if (mode === subjectMode) return;
+    if (document.getElementById('resultsPanel').style.display === 'block') {
+        startNewAssessment();
+    }
+    subjectMode = mode;
+    document.body.classList.toggle('mode-private', mode === 'private');
+    document.getElementById('modePublicBtn').classList.toggle('active', mode === 'public');
+    document.getElementById('modePrivateBtn').classList.toggle('active', mode === 'private');
+    hideAnalysisError();
+    hideCelebrityInfo();
+    switchImgTab(mode === 'private' ? 'upload' : 'url');
+    updateConsentLock();
+}
+
+function resetPrivateForm() {
+    const consent = document.getElementById('privateConsent');
+    if (consent) { consent.checked = false; consent.disabled = false; }
+    const age = document.getElementById('privateAgeRange');
+    if (age) { age.value = ''; age.disabled = false; }
+    const bg = document.getElementById('privateBackground');
+    if (bg) { bg.value = ''; bg.readOnly = false; }
+    document.querySelectorAll('.bfi-opt input').forEach(r => { r.checked = false; r.disabled = false; });
+    document.querySelectorAll('.bfi-row').forEach(r => r.classList.remove('bfi-missing'));
+    questionnaireStartedAt = null;
+    const btn = document.getElementById('privateSubmitBtn');
+    if (btn) { btn.style.display = ''; btn.disabled = false; }
+    const txt = document.getElementById('privateSubmitText');
+    if (txt) txt.textContent = 'Analyze My Photo & Answers';
+    updateConsentLock();
+}
+
+function lockPrivateForm() {
+    document.getElementById('privateConsent').disabled = true;
+    document.getElementById('privateAgeRange').disabled = true;
+    document.getElementById('privateBackground').readOnly = true;
+    document.querySelectorAll('.bfi-opt input').forEach(r => r.disabled = true);
+    document.getElementById('privateSubmitBtn').style.display = 'none';
+}
+
+async function runPrivateAnalyze() {
+    if (isSubmitting) return;
+    hideAnalysisError();
+    if (photoCheckInProgress) { showAnalysisError('Please wait — your photo is still being checked.'); return; }
+
+    if (!document.getElementById('privateConsent').checked) {
+        showAnalysisError('Please read and tick the consent box first.');
+        return;
+    }
+    const ageRange = document.getElementById('privateAgeRange').value;
+    if (!ageRange) { showAnalysisError('Please select your age range.'); return; }
+    if (!fetchedImagePath) { showAnalysisError('Please upload your photo and wait for it to finish checking.'); return; }
+
+    const answers = [];
+    let firstMissing = null;
+    document.querySelectorAll('.bfi-row').forEach((row, i) => {
+        const checked = row.querySelector('input:checked');
+        row.classList.toggle('bfi-missing', !checked);
+        if (!checked && firstMissing === null) firstMissing = row;
+        answers.push(checked ? parseInt(checked.value, 10) : null);
+    });
+    if (firstMissing) {
+        showAnalysisError('Please answer all 10 questions.');
+        firstMissing.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+    }
+
+    const btn = document.getElementById('privateSubmitBtn');
+    const txt = document.getElementById('privateSubmitText');
+    isSubmitting = true;
+    btn.disabled = true;
+    txt.innerHTML = '<span class="spinner-sm"></span> Analyzing…';
+
+    try {
+        const res = await fetch('/analyze_private', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json', 'X-CSRFToken': getCsrfToken()},
+            body: JSON.stringify({
+                consent: true,
+                age_range: ageRange,
+                background: document.getElementById('privateBackground').value.trim(),
+                answers: answers,
+                duration_seconds: questionnaireStartedAt ? (Date.now() - questionnaireStartedAt) / 1000 : null,
+                upload_id: fetchedImagePath
+            })
+        });
+        const data = await res.json();
+        if (!data.success) {
+            if (data.moderation_flag) { clearImage(); showModerationWarning('explicit_content', data.error); }
+            else if (data.no_face) { clearImage(); showModerationWarning('no_face', data.error, data.no_face_category); }
+            else if (data.ai_generated) { clearImage(); showModerationWarning('ai_generated', data.error); }
+            handlePhotoAttempts(data);
+            showToast('✗ ' + data.error, 'error');
+            showAnalysisError(data.error);
+            btn.disabled = false;
+            txt.textContent = 'Analyze My Photo & Answers';
+            isSubmitting = false;
+            return;
+        }
+        renderResults(data);
+        lockAssessment(data);
+        lockPrivateForm();
+        showToast(`✓ Done! Your Participant ID is ${data.participant_id}. Save it if you may ask for deletion.`, 'success');
+        isSubmitting = false;
+    } catch (e) {
+        showToast('Request failed: ' + e.message, 'error');
+        showAnalysisError('Network request failed: ' + e.message);
+        btn.disabled = false;
+        txt.textContent = 'Analyze My Photo & Answers';
+        isSubmitting = false;
+    }
+}
+
+function renderResults(data) {
+    lastResultData = data;
+    const isQuestionnaire = data.score_source === 'BFI-10';
+    document.getElementById('resultsSub').textContent = isQuestionnaire
+        ? 'Dual-Pipeline Evaluation: Self-Report Questionnaire & Facial ML Prediction'
+        : 'Dual-Pipeline Evaluation: AI Narrative Inference & Facial ML Prediction';
+    const pidNote = document.getElementById('participantIdNote');
+    if (isQuestionnaire && data.participant_id) {
+        pidNote.innerHTML = `🔑 Your Participant ID: <strong>${escapeHtml(data.participant_id)}</strong> — save this. Give it to the researchers if you want your data deleted.`;
+        pidNote.classList.remove('hidden');
+    } else {
+        pidNote.classList.add('hidden');
+        pidNote.innerHTML = '';
+    }
+    document.getElementById('bioTab').textContent = isQuestionnaire ? '✦ Questionnaire (BFI-10)' : '✦ AI Biography Analysis';
+    document.getElementById('bioSourcePill').textContent = isQuestionnaire ? 'Self-Report Questionnaire' : 'Claude AI Analysis';
+    document.getElementById('bioSourceText').textContent = isQuestionnaire
+        ? "Scores computed from the participant's own answers to the BFI-10 (10-item Big Five Inventory)"
+        : 'Scores derived from biographical narrative using Claude AI personality psychology inference';
+    const ptype = personalityType(data.biography_scores);
+    const typeEl = document.getElementById('resultsType');
+    if (isQuestionnaire) {
+        document.getElementById('resultsName').textContent = ptype.title;
+        typeEl.textContent = `Your personality type: ${ptype.summary}, based on your answers`;
+    } else {
+        document.getElementById('resultsName').textContent = data.name;
+        typeEl.textContent = `Personality type: ${ptype.title} (${ptype.summary})`;
+    }
+    document.getElementById('resultsPanel').style.display = 'block';
+    document.getElementById('bioReasoning').textContent = data.reasoning || '';
+
+    document.querySelectorAll('.tab').forEach(el => el.style.display = '');
+    document.querySelectorAll('.tab-content').forEach(el => el.style.display = '');
+    document.querySelectorAll('.results-actions').forEach(el => el.style.display = '');
+
+    switchTab('bio');
+
+    renderTraits('bioTraits', data.biography_scores);
+
+    if (data.has_estimation && data.estimated_scores) {
+        renderTraits('predTraits', data.estimated_scores, true);
+        document.getElementById('estTab').style.display = '';
+        document.getElementById('corrTab').style.display = '';
+
+        // Display fresh HOG extraction confirmation badge
+        const hogInfo = document.getElementById('freshHogInfo');
+        if (hogInfo) {
+            const box = data.embedding_info && data.embedding_info.face_box;
+            const dimStr = box ? `${box.w}×${box.h} px` : '128×128 px';
+            hogInfo.innerHTML = `
+                <div class="fresh-hog-badge">
+                    <span class="fresh-hog-icon">✓</span>
+                    <span>Fresh 512-D HOG Extracted (${dimStr} face ROI) &amp; Predicted via Random Forest</span>
+                </div>
+            `;
+        }
+
+        renderCorrelation(data.biography_scores, data.estimated_scores);
+    } else {
+        document.getElementById('estTab').style.display = 'none';
+        document.getElementById('corrTab').style.display = 'none';
+    }
+
+    renderOceanForTab('bio');
+    document.getElementById('resultsPanel').scrollIntoView({ behavior: 'smooth' });
+}
+
+function renderCorrelation(bioScores, faceScores) {
+    const traits = Object.keys(bioScores);
+    const rows = traits.map(trait => {
+        const bio = Math.round(bioScores[trait]);
+        const face = Math.round(faceScores[trait]);
+        const diff = Math.abs(bio - face);
+        const color = OCEAN_COLORS[trait];
+
+        // Alignment level
+        let alignLabel, alignColor;
+        if (diff <= 10)      { alignLabel = 'High Agreement'; alignColor = '#6FAD6F'; }
+        else if (diff <= 20) { alignLabel = 'Moderate Agreement'; alignColor = '#5BA89E'; }
+        else if (diff <= 35) { alignLabel = 'Low Agreement'; alignColor = '#C49A4A'; }
+        else                 { alignLabel = 'Divergent'; alignColor = '#E07C6F'; }
+
+        return `
+        <div class="corr-row">
+            <div class="corr-trait-name" style="color:${color}">${TRAIT_LABELS[trait]}</div>
+            <div class="corr-bars">
+                <div class="corr-bar-wrap">
+                    <div class="corr-bar-label">${(lastResultData && lastResultData.score_source === 'BFI-10') ? 'Questionnaire' : 'Biography'}</div>
+                    <div class="corr-bar-track">
+                        <div class="corr-bar-fill" style="width:${bio}%;background:${color};opacity:1"></div>
+                    </div>
+                    <div class="corr-bar-val">${bio}</div>
+                </div>
+                <div class="corr-bar-wrap">
+                    <div class="corr-bar-label">Facial</div>
+                    <div class="corr-bar-track">
+                        <div class="corr-bar-fill" style="width:${face}%;background:${color};opacity:0.45"></div>
+                    </div>
+                    <div class="corr-bar-val">${face}</div>
+                </div>
+            </div>
+            <div class="corr-diff-wrap">
+                <span class="corr-diff-label">Δ ${diff} pts</span>
+                <span class="corr-align" style="color:${alignColor}">${alignLabel}</span>
+            </div>
+        </div>`;
+    }).join('');
+
+    // Overall alignment score (avg diff → 0=perfect, 100=worst)
+    const avgDiff = traits.reduce((s, t) => s + Math.abs(Math.round(bioScores[t]) - Math.round(faceScores[t])), 0) / traits.length;
+    const alignPct = Math.max(0, Math.round(100 - avgDiff));
+    let overallLabel, overallColor;
+    if (alignPct >= 80)      { overallLabel = 'Strong Score Agreement'; overallColor = '#6FAD6F'; }
+    else if (alignPct >= 60) { overallLabel = 'Moderate Score Agreement'; overallColor = '#5BA89E'; }
+    else if (alignPct >= 40) { overallLabel = 'Low Score Agreement'; overallColor = '#C49A4A'; }
+    else                     { overallLabel = 'Divergent Scores'; overallColor = '#E07C6F'; }
+
+    document.getElementById('corrContent').innerHTML = `
+        <div class="corr-summary">
+            <div class="corr-summary-score" style="color:${overallColor}">${alignPct}%</div>
+            <div class="corr-summary-label" style="color:${overallColor}">${overallLabel}</div>
+            <div class="corr-summary-note">Overall profile score similarity between biography-derived and facial ML-predicted OCEAN scores</div>
+            <div class="corr-stat-note" style="font-size:0.78rem;color:var(--text-muted);margin-top:0.35rem">
+                * Note: This metric represents subject-level score agreement (100 &minus; mean absolute difference), distinct from population Pearson correlation (r).
+            </div>
+        </div>
+        <div class="corr-legend">
+            <span class="corr-legend-item"><span class="corr-legend-bar" style="background:var(--accent);opacity:1"></span> Biography Score</span>
+            <span class="corr-legend-item"><span class="corr-legend-bar" style="background:var(--accent);opacity:0.4"></span> Facial Prediction</span>
+        </div>
+        ${rows}
+        <div class="corr-note">
+            <strong>How to read this:</strong> Δ (delta) is the point difference between scores. 
+            <span style="color:#6FAD6F">High Agreement (0–10 pts)</span>, 
+            <span style="color:#5BA89E">Moderate (11–20 pts)</span>, 
+            <span style="color:#C49A4A">Low (21–35 pts)</span>, 
+            <span style="color:#E07C6F">Divergent (36+ pts)</span>.
+        </div>
+    `;
+}
+
+// ── Plain-language explanations (layman terms) ──
+// Score bands: 0-35 low, 36-64 average, 65-100 high
+function scoreBand(v) { return v >= 65 ? 'high' : (v <= 35 ? 'low' : 'mid'); }
+
+const TRAIT_PLAIN = {
+    openness: {
+        high: '{S} {is} curious, creative, and open to new ideas. {S} {enjoys} imagination, art, and trying new things.',
+        mid:  '{S} {is} open to new ideas but also {likes} what is familiar, a balance of creativity and practicality.',
+        low:  '{S} {prefers} what is practical and familiar, and {likes} clear, proven ways of doing things over abstract ideas.'
+    },
+    conscientiousness: {
+        high: '{S} {is} organized, responsible, and hardworking, and {likes} to plan ahead and finish tasks properly.',
+        mid:  '{S} can be organized when it matters, but {is} also flexible and relaxed about some things.',
+        low:  '{S} {is} spontaneous and flexible, and may prefer going with the flow over strict plans and schedules.'
+    },
+    extraversion: {
+        high: '{S} {is} outgoing, talkative, and energized by being around people.',
+        mid:  '{S} {enjoys} socializing but also {values} quiet time, a mix of outgoing and reserved.',
+        low:  '{S} {is} quiet and reserved, and {prefers} small groups or time alone to recharge.'
+    },
+    agreeableness: {
+        high: '{S} {is} kind, trusting, and easy to get along with, and {cares} about keeping the peace.',
+        mid:  '{S} {is} generally cooperative but can stand firm when something really matters.',
+        low:  '{S} {is} direct and independent-minded, and {is} not afraid to disagree or challenge others.'
+    },
+    neuroticism: {
+        high: '{S} {feels} emotions strongly and may get stressed or worried more easily than most people.',
+        mid:  '{S} {feels} stress sometimes, like most people, but usually {handles} it well.',
+        low:  '{S} {is} calm and emotionally steady, and usually {stays} relaxed under pressure.'
+    }
+};
+
+const VERB_FORMS = {
+    is: ['are', 'is'], enjoys: ['enjoy', 'enjoys'], likes: ['like', 'likes'], prefers: ['prefer', 'prefers'],
+    values: ['value', 'values'], cares: ['care', 'cares'], feels: ['feel', 'feels'], handles: ['handle', 'handles'],
+    stays: ['stay', 'stays']
+};
+
+function plainExplanation(trait, value, subject) {
+    // subject = null for "You", otherwise a display name (third person)
+    const second = !subject;
+    let text = TRAIT_PLAIN[trait][scoreBand(value)];
+    text = text.replace(/\{S\}/g, second ? 'You' : subject);
+    text = text.replace(/\{(\w+)\}/g, (m, v) => VERB_FORMS[v] ? VERB_FORMS[v][second ? 0 : 1] : m);
+    return text;
+}
+
+// Personality "result name" based on the strongest trait (furthest from the average of 50)
+const PERSONALITY_TYPES = {
+    openness:          { high: ['The Creative Explorer', 'curious'],       low: ['The Practical Realist', 'practical'] },
+    conscientiousness: { high: ['The Reliable Organizer', 'organized'],    low: ['The Free Spirit', 'spontaneous'] },
+    extraversion:      { high: ['The Social Energizer', 'outgoing'],       low: ['The Quiet Thinker', 'reserved'] },
+    agreeableness:     { high: ['The Caring Harmonizer', 'caring'],        low: ['The Independent Challenger', 'independent'] },
+    neuroticism:       { high: ['The Sensitive Feeler', 'sensitive'],      low: ['The Calm Anchor', 'calm'] }
+};
+
+function personalityType(scores) {
+    const ranked = Object.keys(PERSONALITY_TYPES)
+        .filter(t => scores[t] !== undefined && scoreBand(scores[t]) !== 'mid')
+        .sort((a, b) => Math.abs(scores[b] - 50) - Math.abs(scores[a] - 50));
+    if (!ranked.length) {
+        return { title: 'The Balanced All-Rounder', summary: 'balanced across all five traits' };
+    }
+    const pick = t => PERSONALITY_TYPES[t][scores[t] >= 65 ? 'high' : 'low'];
+    const words = ranked.slice(0, 2).map(t => pick(t)[1]);
+    return { title: pick(ranked[0])[0], summary: 'mostly ' + words.join(' and ') };
+}
+
+function resultSubjectName() {
+    // "You" for private participants; first name for public figures
+    if (!lastResultData || lastResultData.score_source === 'BFI-10') return null;
+    const first = String(lastResultData.name || '').trim().split(/\s+/)[0];
+    return first || 'This person';
+}
+
+function renderTraits(containerId, scores, isFaceEstimate) {
+    const container = document.getElementById(containerId);
+    const subject = resultSubjectName();
+    const prefix = isFaceEstimate
+        ? 'Face-based guess: '
+        : (lastResultData && lastResultData.score_source === 'BFI-10' ? 'Based on your answers: ' : 'Based on the biography: ');
+    container.innerHTML = Object.entries(scores).map(([trait, val]) => `
+        <div class="trait-row">
+            <div class="trait-meta">
+                <span class="trait-name">${TRAIT_LABELS[trait]}</span>
+                <span class="trait-desc">${TRAIT_DESC[trait]}</span>
+            </div>
+            <div class="trait-bar-wrap">
+                <div class="trait-bar" style="--w:${val}%;--c:${OCEAN_COLORS[trait]}"></div>
+            </div>
+            <div class="trait-val" style="color:${OCEAN_COLORS[trait]}">${Math.round(val)}${isFaceEstimate ? '<span class="trait-val-max"> / 100</span>' : ''}</div>
+            <div class="trait-explain"><span class="trait-explain-prefix">${prefix}</span>${escapeHtml(plainExplanation(trait, val, subject))}</div>
+        </div>`).join('');
+}
+
+// OCEAN summary boxes follow the active tab and always state where the scores come from
+const OCEAN_SOURCE_LABELS = {
+    bio: 'OCEAN Profile — from Biography (Claude AI)',
+    est: 'OCEAN Profile — Predicted from Face (Random Forest)'
+};
+
+function bioOceanLabel() {
+    return (lastResultData && lastResultData.score_source === 'BFI-10')
+        ? 'OCEAN Profile — from Questionnaire (BFI-10)'
+        : OCEAN_SOURCE_LABELS.bio;
+}
+
+function renderOceanForTab(tab) {
+    if (!lastResultData) return;
+    const bio = lastResultData.biography_scores;
+    const est = (lastResultData.has_estimation && lastResultData.estimated_scores) ? lastResultData.estimated_scores : null;
+    let rows;
+    if (tab === 'est' && est) {
+        rows = [{ label: OCEAN_SOURCE_LABELS.est, scores: est }];
+    } else if (tab === 'corr' && est) {
+        rows = [{ label: bioOceanLabel(), scores: bio }, { label: OCEAN_SOURCE_LABELS.est, scores: est }];
+    } else {
+        rows = [{ label: bioOceanLabel(), scores: bio }];
+    }
+    renderOcean(rows);
+}
+
+function renderOcean(rows) {
+    const letters = { openness:'O', conscientiousness:'C', extraversion:'E', agreeableness:'A', neuroticism:'N' };
+    const el = document.getElementById('oceanDisplay');
+    el.style.display = '';
+    el.innerHTML = rows.map(row => `
+        <div class="ocean-source-label">${escapeHtml(row.label)}</div>
+        <div class="ocean-summary">
+            ${Object.entries(letters).map(([t,l]) => `
+                <div class="ocean-pill" style="--c:${OCEAN_COLORS[t]}">
+                    <span class="pill-letter">${l}</span>
+                    <span class="pill-val">${Math.round(row.scores[t])}</span>
+                </div>`).join('')}
+        </div>`).join('');
+}
+
+function switchTab(tab) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelector(`.tab[onclick="switchTab('${tab}')"]`).classList.add('active');
+    document.getElementById(`tab${tab.charAt(0).toUpperCase()+tab.slice(1)}`).classList.add('active');
+    renderOceanForTab(tab);
+}
+
+
+
+function getAdminKey() {
+    let key = sessionStorage.getItem('facepersona_admin_key');
+    if (!key) {
+        key = prompt('Enter Research Admin Key to authorize model retraining (or cancel and use manage_research.py on server):');
+        if (key && key.trim()) {
+            key = key.trim();
+            sessionStorage.setItem('facepersona_admin_key', key);
+        }
+    }
+    return key;
+}
+
+async function trainModel() {
+    const adminKey = getAdminKey();
+    if (!adminKey) {
+        showToast('Administrative authorization required. Researchers can run "python manage_research.py retrain" on the server.', 'info');
+        return;
+    }
+    showToast('Retraining model, please wait…', 'info');
+    try {
+        const res = await fetch('/retrain', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCsrfToken(),
+                'X-Admin-Key': adminKey
+            }
+        });
+        const data = await res.json();
+        if (res.status === 403) {
+            sessionStorage.removeItem('facepersona_admin_key');
+            showToast('✗ ' + (data.message || data.error || 'Unauthorized: Invalid Research Admin Key.'), 'error');
+            return;
+        }
+        showToast(data.success ? '✓ ' + data.message : '✗ ' + data.message, data.success ? 'success' : 'error');
+    } catch(e) {
+        showToast('Request failed.', 'error');
+    }
+}
+</script>
+{% endblock %}

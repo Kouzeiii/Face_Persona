@@ -1,0 +1,275 @@
+{% extends "base.html" %}
+{% block title %}Model Insights — FacePersona{% endblock %}
+
+{% block content %}
+<div class="page-hero-sm">
+    <div class="page-hero-row">
+        <div>
+            <h1 class="page-title">Model Insights</h1>
+            <p class="page-sub">ML model performance, R² scores, and face-personality relationships.</p>
+        </div>
+        <button class="btn btn-primary" id="retrainBtn" onclick="trainModel()">Retrain Model</button>
+    </div>
+</div>
+
+{% if not model_exists %}
+<div class="empty-state">
+    <div class="empty-icon">◈</div>
+    <h3>No model trained yet</h3>
+    <p>Add at least 5 subjects and train the model to see insights.</p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+        <a href="{{ url_for('analyze') }}" class="btn btn-primary">Add Subjects</a>
+        <button class="btn btn-ghost" onclick="trainModel()">Train Now</button>
+    </div>
+</div>
+{% elif not metrics %}
+<div class="alert alert-amber">
+    <div class="alert-icon">⚠</div>
+    <div class="alert-body">Model exists but no metrics found. Click <strong>Retrain Model</strong> to generate insights.</div>
+</div>
+{% else %}
+
+{% if metrics.is_outdated %}
+<div class="alert alert-amber" style="margin-bottom:1.5rem">
+    <div class="alert-icon">⚠</div>
+    <div class="alert-body"><strong>Model Outdated:</strong> {{ metrics.outdated_reason or 'A subject was removed from the dataset. Please click Retrain Model to update.' }}</div>
+</div>
+{% endif %}
+
+<!-- Overview Stats -->
+<div class="stats-row" style="margin-bottom:2rem">
+    <div class="stat-card">
+        <div class="stat-num">{{ metrics.n_subjects }}</div>
+        <div class="stat-label">Training Subjects</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-num">{{ metrics.pca_components }}</div>
+        <div class="stat-label">PCA Components</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-num {% if metrics.test_r2 is not none and metrics.test_r2 > 0 %}green{% elif metrics.test_r2 is not none %}amber{% else %}neutral{% endif %}">
+            {{ metrics.test_r2 if metrics.test_r2 is not none else 'N/A' }}
+        </div>
+        <div class="stat-label">Held-out Test R²</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-num {% if metrics.oob_r2 is not none and metrics.oob_r2 > 0 %}green{% elif metrics.oob_r2 is not none %}amber{% else %}neutral{% endif %}">
+            {{ metrics.oob_r2 if metrics.oob_r2 is not none else 'N/A' }}
+        </div>
+        <div class="stat-label">Secondary OOB R²</div>
+    </div>
+</div>
+
+<!-- What is R2 explanation -->
+<div class="insight-explainer">
+    <div class="explainer-icon">ℹ</div>
+    <div class="explainer-body">
+        <strong>Evaluation Methodology:</strong>
+        <strong>Held-out Test R²</strong> evaluates predictive performance on an independent, unobserved 20% test partition without preprocessing data leakage (StandardScaler and PCA are fitted strictly on the training partition).
+        A score of <strong>1.0</strong> represents perfect prediction, <strong>0.0</strong> represents baseline mean prediction, and <strong>negative values</strong> indicate variance exceeds baseline.
+        <strong>Secondary OOB R²</strong> is an internal diagnostic computed during training on out-of-bag samples of the training partition only, distinct from test generalization.
+    </div>
+</div>
+
+<!-- Per-Trait Metrics -->
+<div class="section-header" style="margin-top:2rem">
+    <h2 class="section-title">Per-Trait Performance</h2>
+    <span class="section-hint">Held-out evaluation metrics (leakage-free) for each Big Five trait</span>
+</div>
+
+<div class="metrics-cards">
+    {% for trait in ['openness','conscientiousness','extraversion','agreeableness','neuroticism'] %}
+    {% set m = metrics.trait_metrics[trait] %}
+    {% set r2 = m.r2 %}
+    {% set r2_color = ocean_colors[trait] %}
+    <div class="metric-card">
+        <div class="metric-header" style="--c: {{ r2_color }}">
+            <span class="metric-letter">{{ trait[0]|upper }}</span>
+            <span class="metric-trait-name">{{ trait_labels[trait] }}</span>
+        </div>
+        <div class="metric-body">
+            <div class="metric-r2-wrap">
+                <div class="metric-r2-label">R² Score</div>
+                <div class="metric-r2-val {% if r2 is not none and r2 > 0.5 %}good{% elif r2 is not none and r2 > 0 %}okay{% elif r2 is not none %}poor{% else %}neutral{% endif %}">
+                    {{ r2 if r2 is not none else 'N/A' }}
+                </div>
+                <div class="metric-r2-bar-wrap">
+                    <div class="metric-r2-bar" style="--w: {{ [r2 * 100, 100]|min if r2 is not none and r2 > 0 else 0 }}%; --c: {{ r2_color }}"></div>
+                </div>
+            </div>
+            <div class="metric-detail-row"><span>MAE (Error)</span><span>{{ ('±' ~ m.mae ~ ' pts') if m.mae is not none else 'N/A' }}</span></div>
+            <div class="metric-detail-row"><span>Pearson r</span><span>{{ m.pearson_r if m.pearson_r is not none else 'N/A' }}</span></div>
+            <div class="metric-detail-row"><span>p-value</span><span>{{ m.p_value if m.p_value is not none else 'N/A' }}</span></div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- PCA Explained Variance -->
+<div class="section-header" style="margin-top:2.5rem">
+    <h2 class="section-title">PCA — Explained Variance</h2>
+    <span class="section-hint">How much of the face data each principal component captures</span>
+</div>
+<div class="insight-explainer">
+    <div class="explainer-icon">ℹ</div>
+    <div class="explainer-body">
+        <strong>What is PCA?</strong> Principal Component Analysis reduces 512 face dimensions to {{ metrics.pca_components }} components. 
+        Each component captures a different "pattern" in the facial data. Higher % = more information captured by that component.
+    </div>
+</div>
+<div class="pca-chart">
+    {% set max_var = metrics.explained_variance[0] %}
+    {% for val in metrics.explained_variance %}
+    <div class="pca-bar-group">
+        <div class="pca-bar-wrap">
+            <div class="pca-bar" style="height: {{ (val / max_var * 160)|round }}px;" title="PC{{ loop.index }}: {{ val }}%"></div>
+        </div>
+        <div class="pca-label">PC{{ loop.index }}</div>
+        <div class="pca-val">{{ val }}%</div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Scatter Plot: Actual vs Estimated -->
+{% if metrics.predictions and metrics.predictions|length > 1 %}
+<div class="section-header" style="margin-top:2.5rem">
+    <h2 class="section-title">Actual vs Estimated</h2>
+    <span class="section-hint">Each dot represents an anonymized held-out evaluation participant (P1–P{{ metrics.predictions|length }}) — closer to the diagonal = better estimation</span>
+</div>
+<div class="scatter-controls">
+    <label class="form-label" style="margin:0">Trait:</label>
+    <select id="traitSelect" onchange="renderScatter()" class="scatter-select">
+        {% for trait in ['openness','conscientiousness','extraversion','agreeableness','neuroticism'] %}
+        <option value="{{ trait }}">{{ trait_labels[trait] }}</option>
+        {% endfor %}
+    </select>
+</div>
+<div class="scatter-wrap">
+    <canvas id="scatterCanvas" width="560" height="400"></canvas>
+</div>
+{% endif %}
+
+{% endif %}
+
+<div id="toast" class="toast hidden"></div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const metricsData = {{ metrics | tojson if metrics else 'null' }};
+const oceanColors = {{ ocean_colors | tojson }};
+const traitNames = ['openness','conscientiousness','extraversion','agreeableness','neuroticism'];
+
+function getAdminKey() {
+    let key = sessionStorage.getItem('facepersona_admin_key');
+    if (!key) {
+        key = prompt('Enter Research Admin Key to authorize model retraining (or cancel and use manage_research.py on server):');
+        if (key && key.trim()) {
+            key = key.trim();
+            sessionStorage.setItem('facepersona_admin_key', key);
+        }
+    }
+    return key;
+}
+
+async function trainModel() {
+    const adminKey = getAdminKey();
+    if (!adminKey) {
+        showToast('Administrative key required. Use manage_research.py on the server.', 'error');
+        return;
+    }
+    const btn = document.getElementById('retrainBtn');
+    if (btn) {
+        btn.disabled = true;
+        btn.textContent = 'Training…';
+    }
+    showToast('Retraining model, please wait…', 'info');
+    try {
+        const res = await fetch('/retrain', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCsrfToken(),
+                'X-Admin-Key': adminKey
+            }
+        });
+        const data = await res.json();
+        if (res.status === 403) {
+            sessionStorage.removeItem('facepersona_admin_key');
+            showToast('✗ ' + (data.message || data.error || 'Unauthorized: Invalid Research Admin Key.'), 'error');
+            if (btn) { btn.disabled = false; btn.textContent = 'Retrain Model'; }
+            return;
+        }
+        if (data.success) {
+            showToast('✓ ' + data.message, 'success');
+            setTimeout(() => location.reload(), 1500);
+        } else {
+            showToast('✗ ' + data.message, 'error');
+            if (btn) { btn.disabled = false; btn.textContent = 'Retrain Model'; }
+        }
+    } catch(e) {
+        showToast('Request failed.', 'error');
+        if (btn) { btn.disabled = false; btn.textContent = 'Retrain Model'; }
+    }
+}
+
+function renderScatter() {
+    if (!metricsData || !metricsData.predictions) return;
+    const trait = document.getElementById('traitSelect').value;
+    const canvas = document.getElementById('scatterCanvas');
+    const ctx = canvas.getContext('2d');
+    const W = canvas.width, H = canvas.height;
+    const pad = 60;
+    ctx.clearRect(0, 0, W, H);
+
+    const data = metricsData.predictions;
+    const actual = data.map(d => d[trait + '_actual']);
+    const predicted = data.map(d => d[trait + '_predicted']);
+    const names = data.map(d => d.name);
+
+    const minV = Math.min(...actual, ...predicted, 0);
+    const maxV = Math.max(...actual, ...predicted, 100);
+
+    function toX(v) { return pad + (v - minV) / (maxV - minV) * (W - pad * 2); }
+    function toY(v) { return H - pad - (v - minV) / (maxV - minV) * (H - pad * 2); }
+
+    // Grid
+    ctx.strokeStyle = '#E8E6E0'; ctx.lineWidth = 1;
+    for (let v = 0; v <= 100; v += 20) {
+        ctx.beginPath(); ctx.moveTo(toX(v), pad); ctx.lineTo(toX(v), H - pad); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(pad, toY(v)); ctx.lineTo(W - pad, toY(v)); ctx.stroke();
+    }
+
+    // Diagonal (perfect prediction line)
+    ctx.strokeStyle = '#D4D1C8'; ctx.lineWidth = 1.5; ctx.setLineDash([6, 4]);
+    ctx.beginPath(); ctx.moveTo(toX(minV), toY(minV)); ctx.lineTo(toX(maxV), toY(maxV)); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Axes labels
+    ctx.fillStyle = '#8C8880'; ctx.font = '12px DM Sans, sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText('Actual Score', W / 2, H - 10);
+    ctx.save(); ctx.translate(14, H / 2); ctx.rotate(-Math.PI / 2);
+    ctx.fillText('Estimated Score', 0, 0); ctx.restore();
+
+    for (let v = 0; v <= 100; v += 20) {
+        ctx.fillStyle = '#8C8880'; ctx.font = '11px DM Sans, sans-serif';
+        ctx.textAlign = 'center'; ctx.fillText(v, toX(v), H - pad + 16);
+        ctx.textAlign = 'right'; ctx.fillText(v, pad - 6, toY(v) + 4);
+    }
+
+    // Points
+    const color = oceanColors[trait];
+    data.forEach((d, i) => {
+        const x = toX(actual[i]), y = toY(predicted[i]);
+        ctx.beginPath(); ctx.arc(x, y, 7, 0, Math.PI * 2);
+        ctx.fillStyle = color + '33'; ctx.fill();
+        ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.stroke();
+        ctx.fillStyle = '#1A1916'; ctx.font = '10px DM Sans, sans-serif';
+        ctx.textAlign = 'center'; ctx.fillText(`P${i+1}`, x, y - 11);
+    });
+}
+
+if (metricsData && metricsData.predictions) {
+    setTimeout(renderScatter, 100);
+}
+</script>
+{% endblock %}

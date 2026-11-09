@@ -1,0 +1,1086 @@
+{
+  "name": "Paul Mccartney",
+  "profession": "musician",
+  "profession_label": "Musician / Artist",
+  "biography_scores": {
+    "openness": 95.0,
+    "conscientiousness": 78.0,
+    "extraversion": 82.0,
+    "agreeableness": 72.0,
+    "neuroticism": 45.0
+  },
+  "estimated_scores": {
+    "openness": 78.0,
+    "conscientiousness": 83.0,
+    "extraversion": 74.7,
+    "agreeableness": 62.0,
+    "neuroticism": 50.8
+  },
+  "reasoning": "McCartney demonstrates exceptionally high openness through his diverse musical experimentation, multi-instrumental mastery, and prolific creative output across six decades. His extraversion is evident in his front-man role, collaborative partnerships, and sustained public performance career. Conscientiousness is reflected in his disciplined work ethic and productivity, while moderate agreeableness is suggested by successful collaborations balanced against creative tensions during The Beatles' breakup, and relatively low neuroticism is indicated by his resilience after early maternal loss and ability to sustain a long, high-pressure career.",
+  "embedding_info": {
+    "face_detected": true,
+    "face_box": {
+      "x": 43,
+      "y": 77,
+      "w": 135,
+      "h": 135,
+      "img_w": 250,
+      "img_h": 333
+    },
+    "embedding_dim": 512,
+    "norm_before": 3.7525601387023926,
+    "top10_values": [
+      0.022746,
+      0.019615,
+      0.030479,
+      0.062221,
+      0.062221,
+      0.062221,
+      0.03262,
+      0.028874,
+      0.014035,
+      0.018831
+    ],
+    "top50_values": [
+      0.0227,
+      0.0196,
+      0.0305,
+      0.0622,
+      0.0622,
+      0.0622,
+      0.0326,
+      0.0289,
+      0.014,
+      0.0188,
+      0.0189,
+      0.0384,
+      0.0497,
+      0.0622,
+      0.0622,
+      0.0522,
+      0.0203,
+      0.0091,
+      0.0376,
+      0.0402,
+      0.0323,
+      0.0622,
+      0.0622,
+      0.0622,
+      0.0385,
+      0.0216,
+      0.0352,
+      0.0428,
+      0.0357,
+      0.0436,
+      0.0622,
+      0.0622,
+      0.0622,
+      0.055,
+      0.0254,
+      0.0227,
+      0.0162,
+      0.0085,
+      0.0223,
+      0.0259,
+      0.0475,
+      0.0584,
+      0.048,
+      0.0236,
+      0.0123,
+      0.0168,
+      0.0081,
+      0.0183,
+      0.0288,
+      0.0737
+    ],
+    "cell_grid": [
+      [
+        {
+          "bins": [
+            0.0227,
+            0.0196,
+            0.0305,
+            0.0622,
+            0.0622,
+            0.0622,
+            0.0326,
+            0.0289,
+            0.014
+          ],
+          "dominant": 3,
+          "magnitude": 0.3349
+        },
+        {
+          "bins": [
+            0.0188,
+            0.0189,
+            0.0384,
+            0.0497,
+            0.0622,
+            0.0622,
+            0.0522,
+            0.0203,
+            0.0091
+          ],
+          "dominant": 4,
+          "magnitude": 0.3318
+        },
+        {
+          "bins": [
+            0.0376,
+            0.0402,
+            0.0323,
+            0.0622,
+            0.0622,
+            0.0622,
+            0.0385,
+            0.0216,
+            0.0352
+          ],
+          "dominant": 3,
+          "magnitude": 0.392
+        },
+        {
+          "bins": [
+            0.0428,
+            0.0357,
+            0.0436,
+            0.0622,
+            0.0622,
+            0.0622,
+            0.055,
+            0.0254,
+            0.0227
+          ],
+          "dominant": 3,
+          "magnitude": 0.4118
+        },
+        {
+          "bins": [
+            0.0162,
+            0.0085,
+            0.0223,
+            0.0259,
+            0.0475,
+            0.0584,
+            0.048,
+            0.0236,
+            0.0123
+          ],
+          "dominant": 5,
+          "magnitude": 0.2627
+        },
+        {
+          "bins": [
+            0.0168,
+            0.0081,
+            0.0183,
+            0.0288,
+            0.0737,
+            0.0737,
+            0.0693,
+            0.0309,
+            0.019
+          ],
+          "dominant": 4,
+          "magnitude": 0.3386
+        },
+        {
+          "bins": [
+            0.023,
+            0.0128,
+            0.0352,
+            0.0478,
+            0.063,
+            0.0737,
+            0.0516,
+            0.0305,
+            0.0163
+          ],
+          "dominant": 5,
+          "magnitude": 0.3539
+        },
+        {
+          "bins": [
+            0.0125,
+            0.0152,
+            0.0291,
+            0.0737,
+            0.0737,
+            0.0737,
+            0.0737,
+            0.0394,
+            0.0129
+          ],
+          "dominant": 3,
+          "magnitude": 0.4039
+        }
+      ],
+      [
+        {
+          "bins": [
+            0.0183,
+            0.0379,
+            0.0492,
+            0.03,
+            0.0487,
+            0.0617,
+            0.0408,
+            0.0209,
+            0.0134
+          ],
+          "dominant": 5,
+          "magnitude": 0.3209
+        },
+        {
+          "bins": [
+            0.0481,
+            0.069,
+            0.069,
+            0.0293,
+            0.0154,
+            0.0136,
+            0.0073,
+            0.0173,
+            0.0294
+          ],
+          "dominant": 1,
+          "magnitude": 0.2984
+        },
+        {
+          "bins": [
+            0.0127,
+            0.0397,
+            0.0504,
+            0.069,
+            0.069,
+            0.069,
+            0.069,
+            0.0316,
+            0.0117
+          ],
+          "dominant": 3,
+          "magnitude": 0.4221
+        },
+        {
+          "bins": [
+            0.0468,
+            0.069,
+            0.069,
+            0.0451,
+            0.0369,
+            0.0335,
+            0.0238,
+            0.03,
+            0.0281
+          ],
+          "dominant": 1,
+          "magnitude": 0.3822
+        },
+        {
+          "bins": [
+            0.0637,
+            0.0711,
+            0.0711,
+            0.026,
+            0.0142,
+            0.0042,
+            0.0043,
+            0.0157,
+            0.0404
+          ],
+          "dominant": 1,
+          "magnitude": 0.3107
+        },
+        {
+          "bins": [
+            0.0711,
+            0.0711,
+            0.0537,
+            0.0223,
+            0.0164,
+            0.0086,
+            0.0183,
+            0.0404,
+            0.0273
+          ],
+          "dominant": 0,
+          "magnitude": 0.3292
+        },
+        {
+          "bins": [
+            0.0611,
+            0.0711,
+            0.0711,
+            0.0397,
+            0.0187,
+            0.0099,
+            0.0222,
+            0.0249,
+            0.0321
+          ],
+          "dominant": 1,
+          "magnitude": 0.3508
+        },
+        {
+          "bins": [
+            0.0711,
+            0.0711,
+            0.0711,
+            0.0376,
+            0.0148,
+            0.0055,
+            0.018,
+            0.0305,
+            0.034
+          ],
+          "dominant": 0,
+          "magnitude": 0.3537
+        }
+      ],
+      [
+        {
+          "bins": [
+            0.0652,
+            0.0451,
+            0.0323,
+            0.0184,
+            0.0257,
+            0.0286,
+            0.0387,
+            0.0426,
+            0.0336
+          ],
+          "dominant": 0,
+          "magnitude": 0.3302
+        },
+        {
+          "bins": [
+            0.0658,
+            0.0499,
+            0.0324,
+            0.0119,
+            0.0363,
+            0.0585,
+            0.0648,
+            0.0463,
+            0.0658
+          ],
+          "dominant": 0,
+          "magnitude": 0.4317
+        },
+        {
+          "bins": [
+            0.0658,
+            0.0658,
+            0.042,
+            0.0391,
+            0.0306,
+            0.0071,
+            0.0154,
+            0.0204,
+            0.0358
+          ],
+          "dominant": 0,
+          "magnitude": 0.322
+        },
+        {
+          "bins": [
+            0.0658,
+            0.0658,
+            0.0574,
+            0.0365,
+            0.0534,
+            0.0149,
+            0.0226,
+            0.0125,
+            0.0445
+          ],
+          "dominant": 0,
+          "magnitude": 0.3734
+        },
+        {
+          "bins": [
+            0.0696,
+            0.0467,
+            0.0224,
+            0.0092,
+            0.0197,
+            0.0387,
+            0.0492,
+            0.0622,
+            0.0696
+          ],
+          "dominant": 0,
+          "magnitude": 0.3873
+        },
+        {
+          "bins": [
+            0.0696,
+            0.0435,
+            0.0206,
+            0.018,
+            0.0148,
+            0.0266,
+            0.0379,
+            0.0696,
+            0.0696
+          ],
+          "dominant": 0,
+          "magnitude": 0.3702
+        },
+        {
+          "bins": [
+            0.0508,
+            0.0507,
+            0.0585,
+            0.0192,
+            0.0166,
+            0.0111,
+            0.0219,
+            0.0209,
+            0.0377
+          ],
+          "dominant": 2,
+          "magnitude": 0.2874
+        },
+        {
+          "bins": [
+            0.052,
+            0.0445,
+            0.0352,
+            0.0442,
+            0.0123,
+            0.0116,
+            0.0336,
+            0.0696,
+            0.0696
+          ],
+          "dominant": 7,
+          "magnitude": 0.3726
+        }
+      ],
+      [
+        {
+          "bins": [
+            0.0417,
+            0.0147,
+            0.0217,
+            0.017,
+            0.0131,
+            0.0135,
+            0.0247,
+            0.0812,
+            0.0812
+          ],
+          "dominant": 7,
+          "magnitude": 0.3088
+        },
+        {
+          "bins": [
+            0.0221,
+            0.0161,
+            0.0205,
+            0.0167,
+            0.0132,
+            0.0224,
+            0.0393,
+            0.0812,
+            0.0369
+          ],
+          "dominant": 7,
+          "magnitude": 0.2684
+        },
+        {
+          "bins": [
+            0.039,
+            0.0219,
+            0.0106,
+            0.0363,
+            0.0157,
+            0.0096,
+            0.0503,
+            0.0812,
+            0.0812
+          ],
+          "dominant": 7,
+          "magnitude": 0.3458
+        },
+        {
+          "bins": [
+            0.0447,
+            0.0197,
+            0.0088,
+            0.0133,
+            0.0149,
+            0.0156,
+            0.0812,
+            0.0812,
+            0.0812
+          ],
+          "dominant": 6,
+          "magnitude": 0.3606
+        },
+        {
+          "bins": [
+            0.0148,
+            0.0112,
+            0.0101,
+            0.0095,
+            0.0195,
+            0.0345,
+            0.0591,
+            0.0645,
+            0.0261
+          ],
+          "dominant": 7,
+          "magnitude": 0.2493
+        },
+        {
+          "bins": [
+            0.0052,
+            0.0031,
+            0.0066,
+            0.0077,
+            0.0302,
+            0.0587,
+            0.0737,
+            0.071,
+            0.0197
+          ],
+          "dominant": 6,
+          "magnitude": 0.2759
+        },
+        {
+          "bins": [
+            0.0554,
+            0.0384,
+            0.0184,
+            0.0137,
+            0.0273,
+            0.0272,
+            0.0737,
+            0.0737,
+            0.0737
+          ],
+          "dominant": 6,
+          "magnitude": 0.4015
+        },
+        {
+          "bins": [
+            0.0363,
+            0.0264,
+            0.0295,
+            0.0257,
+            0.0462,
+            0.0481,
+            0.0577,
+            0.0737,
+            0.0737
+          ],
+          "dominant": 7,
+          "magnitude": 0.4173
+        }
+      ],
+      [
+        {
+          "bins": [
+            0.0107,
+            0.0155,
+            0.0139,
+            0.0162,
+            0.0402,
+            0.0633,
+            0.0633,
+            0.0633,
+            0.02
+          ],
+          "dominant": 5,
+          "magnitude": 0.3064
+        },
+        {
+          "bins": [
+            0.0404,
+            0.0576,
+            0.0633,
+            0.0536,
+            0.0362,
+            0.0256,
+            0.0273,
+            0.0216,
+            0.0132
+          ],
+          "dominant": 2,
+          "magnitude": 0.3388
+        },
+        {
+          "bins": [
+            0.0337,
+            0.0215,
+            0.0314,
+            0.0433,
+            0.0578,
+            0.0601,
+            0.0633,
+            0.0633,
+            0.0618
+          ],
+          "dominant": 6,
+          "magnitude": 0.4362
+        },
+        {
+          "bins": [
+            0.0337,
+            0.0502,
+            0.0516,
+            0.0633,
+            0.0633,
+            0.0254,
+            0.0302,
+            0.0362,
+            0.0182
+          ],
+          "dominant": 3,
+          "magnitude": 0.3721
+        },
+        {
+          "bins": [
+            0.0416,
+            0.0716,
+            0.0716,
+            0.0716,
+            0.0328,
+            0.0131,
+            0.0026,
+            0.0014,
+            0.008
+          ],
+          "dominant": 1,
+          "magnitude": 0.3143
+        },
+        {
+          "bins": [
+            0.0531,
+            0.0716,
+            0.0716,
+            0.0628,
+            0.039,
+            0.0136,
+            0.0034,
+            0.0099,
+            0.0119
+          ],
+          "dominant": 1,
+          "magnitude": 0.3369
+        },
+        {
+          "bins": [
+            0.0254,
+            0.0584,
+            0.0716,
+            0.0663,
+            0.0538,
+            0.0201,
+            0.0063,
+            0.02,
+            0.0223
+          ],
+          "dominant": 2,
+          "magnitude": 0.3442
+        },
+        {
+          "bins": [
+            0.0329,
+            0.0716,
+            0.0716,
+            0.0472,
+            0.0281,
+            0.0176,
+            0.0041,
+            0.0152,
+            0.0276
+          ],
+          "dominant": 1,
+          "magnitude": 0.3159
+        }
+      ],
+      [
+        {
+          "bins": [
+            0.0469,
+            0.0476,
+            0.0397,
+            0.0209,
+            0.0351,
+            0.0294,
+            0.0248,
+            0.0506,
+            0.0291
+          ],
+          "dominant": 7,
+          "magnitude": 0.3241
+        },
+        {
+          "bins": [
+            0.0669,
+            0.0669,
+            0.0426,
+            0.0559,
+            0.041,
+            0.0669,
+            0.0669,
+            0.0669,
+            0.0669
+          ],
+          "dominant": 0,
+          "magnitude": 0.5409
+        },
+        {
+          "bins": [
+            0.029,
+            0.0369,
+            0.0267,
+            0.0206,
+            0.0233,
+            0.0182,
+            0.0132,
+            0.0179,
+            0.0229
+          ],
+          "dominant": 1,
+          "magnitude": 0.2087
+        },
+        {
+          "bins": [
+            0.0423,
+            0.0276,
+            0.0208,
+            0.0529,
+            0.0669,
+            0.0342,
+            0.0313,
+            0.0519,
+            0.0669
+          ],
+          "dominant": 4,
+          "magnitude": 0.3948
+        },
+        {
+          "bins": [
+            0.0664,
+            0.0664,
+            0.0664,
+            0.0328,
+            0.0289,
+            0.0409,
+            0.0445,
+            0.0647,
+            0.0664
+          ],
+          "dominant": 0,
+          "magnitude": 0.4774
+        },
+        {
+          "bins": [
+            0.0508,
+            0.061,
+            0.0636,
+            0.0097,
+            0.0336,
+            0.0086,
+            0.0097,
+            0.0148,
+            0.0502
+          ],
+          "dominant": 2,
+          "magnitude": 0.302
+        },
+        {
+          "bins": [
+            0.0359,
+            0.0144,
+            0.01,
+            0.0411,
+            0.0664,
+            0.0233,
+            0.023,
+            0.0493,
+            0.0664
+          ],
+          "dominant": 4,
+          "magnitude": 0.3298
+        },
+        {
+          "bins": [
+            0.0634,
+            0.0299,
+            0.012,
+            0.025,
+            0.0397,
+            0.0177,
+            0.0137,
+            0.0341,
+            0.0664
+          ],
+          "dominant": 8,
+          "magnitude": 0.3019
+        }
+      ],
+      [
+        {
+          "bins": [
+            0.0586,
+            0.0251,
+            0.0414,
+            0.0241,
+            0.0327,
+            0.0078,
+            0.0055,
+            0.0176,
+            0.0577
+          ],
+          "dominant": 0,
+          "magnitude": 0.2705
+        },
+        {
+          "bins": [
+            0.063,
+            0.0238,
+            0.033,
+            0.024,
+            0.0403,
+            0.0236,
+            0.0389,
+            0.0532,
+            0.063
+          ],
+          "dominant": 0,
+          "magnitude": 0.3628
+        },
+        {
+          "bins": [
+            0.0585,
+            0.0495,
+            0.0371,
+            0.0572,
+            0.0584,
+            0.0204,
+            0.0077,
+            0.0178,
+            0.063
+          ],
+          "dominant": 8,
+          "magnitude": 0.3696
+        },
+        {
+          "bins": [
+            0.0394,
+            0.0376,
+            0.0367,
+            0.0503,
+            0.063,
+            0.063,
+            0.063,
+            0.0543,
+            0.0513
+          ],
+          "dominant": 4,
+          "magnitude": 0.4586
+        },
+        {
+          "bins": [
+            0.0625,
+            0.0237,
+            0.0144,
+            0.0152,
+            0.0591,
+            0.0494,
+            0.0492,
+            0.0527,
+            0.0726
+          ],
+          "dominant": 8,
+          "magnitude": 0.3988
+        },
+        {
+          "bins": [
+            0.0329,
+            0.0276,
+            0.0109,
+            0.0147,
+            0.0422,
+            0.0266,
+            0.019,
+            0.0287,
+            0.0387
+          ],
+          "dominant": 4,
+          "magnitude": 0.2413
+        },
+        {
+          "bins": [
+            0.0209,
+            0.0155,
+            0.016,
+            0.0242,
+            0.0726,
+            0.0726,
+            0.0726,
+            0.0592,
+            0.0401
+          ],
+          "dominant": 4,
+          "magnitude": 0.3937
+        },
+        {
+          "bins": [
+            0.0321,
+            0.0435,
+            0.0382,
+            0.0548,
+            0.0692,
+            0.0644,
+            0.0427,
+            0.021,
+            0.0339
+          ],
+          "dominant": 4,
+          "magnitude": 0.3998
+        }
+      ],
+      [
+        {
+          "bins": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "dominant": 0,
+          "magnitude": 0.0
+        },
+        {
+          "bins": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "dominant": 0,
+          "magnitude": 0.0
+        },
+        {
+          "bins": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "dominant": 0,
+          "magnitude": 0.0
+        },
+        {
+          "bins": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "dominant": 0,
+          "magnitude": 0.0
+        },
+        {
+          "bins": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "dominant": 0,
+          "magnitude": 0.0
+        },
+        {
+          "bins": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "dominant": 0,
+          "magnitude": 0.0
+        },
+        {
+          "bins": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "dominant": 0,
+          "magnitude": 0.0
+        },
+        {
+          "bins": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "dominant": 0,
+          "magnitude": 0.0
+        }
+      ]
+    ],
+    "stats": {
+      "min": 0.001418,
+      "max": 0.081157,
+      "mean": 0.038814,
+      "std": 0.021133,
+      "nonzero": 512
+    }
+  },
+  "image_filename": "6ddee2f69f78428ebb357b9d65acb6a9.jpg",
+  "is_public_assessment": true,
+  "access_token": "5gdsMgayRjBqrWuxy9OA-w",
+  "societal_impact": "# Personality Profile: Paul McCartney\n\nPaul McCartney's exceptionally high Openness (95/100) suggests he approaches creative work with remarkable imagination, innovation, and receptivity to diverse musical influences\u2014evident in his willingness to experiment across genres throughout his career. His strong Conscientiousness (78/100) and Extraversion (82/100) indicate he likely combines meticulous attention to craft with collaborative energy and social engagement, enabling both solo projects and group dynamics. In relationships, his relatively moderate Agreeableness (72/100) and low Neuroticism (45/100) suggest he maintains interpersonal warmth while preserving emotional stability and independence, though may prioritize creative vision over compromise at times.\n\nMcCartney's personality profile may have substantially influenced popular music by demonstrating how sustained creative exploration\u2014enabled by high Openness\u2014could coexist with disciplined production and commercial success through Conscientiousness. His extraversion and emotional resilience likely contributed to his role as a cultural ambassador for rock music across decades, facilitating collaborations and public engagement that extended music's reach beyond traditional audiences. This combination of traits suggests he has functioned not merely as an artist but as a catalyst for musical evolution, modeling how personality structures valuing both innovation and dedication can reshape an entire creative field."
+}

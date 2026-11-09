@@ -1,2 +1,34 @@
-# Auto detect text files and perform LF normalization
-* text=auto
+# Prevent sensitive credentials and environment files from being bundled in shared archives
+.env export-ignore
+.env.* export-ignore
+.env.local export-ignore
+.env.*.local export-ignore
+*.pem export-ignore
+*.key export-ignore
+*.secret export-ignore
+credentials.* export-ignore
+*.lock export-ignore
+*.db export-ignore
+*.db-wal export-ignore
+*.db-shm export-ignore
+*.sqlite export-ignore
+*.sqlite3 export-ignore
+*.bak export-ignore
+*.bak.* export-ignore
+*.corrupt export-ignore
+*.corrupt.* export-ignore
+
+# Exclude caches, temporary files, and OS metadata
+__pycache__/ export-ignore
+*.py[cod] export-ignore
+*$py.class export-ignore
+.DS_Store export-ignore
+Thumbs.db export-ignore
+.gitattributes export-ignore
+.gitignore export-ignore
+tests/ export-ignore
+*.zip export-ignore
+*.tar.gz export-ignore
+*.tar export-ignore
+*.7z export-ignore
+*.rar export-ignore

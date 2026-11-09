@@ -1,0 +1,50 @@
+# Environment variables and secrets
+.env
+.env.*
+.env.local
+.env.*.local
+*.pem
+*.key
+*.secret
+credentials.*
+*.lock
+
+# Databases and local runtime data
+*.db
+*.db-wal
+*.db-shm
+*.sqlite
+*.sqlite3
+
+# Backups and recovery
+*.bak
+*.bak.*
+*.corrupt
+*.corrupt.*
+
+# Python cache and bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv/
+
+# Archives
+*.zip
+*.tar.gz
+*.tar
+*.7z
+*.rar
+
+# IDE and OS metadata
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp

@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block title %}{% if is_public_assessment %}Protected Assessment — FacePersona{% else %}Research Baseline Record — FacePersona{% endif %}{% endblock %}
+
+{% block content %}
+<div class="page-hero-sm">
+    <div class="page-hero-row">
+        <div>
+            <a href="{{ url_for('subjects') }}" class="back-link">← Back to Subjects</a>
+            <h1 class="page-title">{% if is_public_assessment %}Protected Assessment Record{% else %}Research Baseline Record{% endif %}</h1>
+            <p class="page-sub">{% if is_public_assessment %}Assessment Privacy &amp; Access Protection{% else %}Ethics &amp; Privacy Protected Dataset Record{% endif %}</p>
+        </div>
+        <a href="{{ url_for('analyze') }}" class="btn btn-primary">+ New Analysis</a>
+    </div>
+</div>
+
+<div class="restricted-container">
+    <div class="restricted-card">
+        <div class="restricted-icon-wrap">
+            <span class="restricted-icon">🔒</span>
+        </div>
+        <h2 class="restricted-title">{% if is_public_assessment %}Assessment Privacy &amp; Access Protection{% else %}Participant Privacy &amp; Research Ethics Protection{% endif %}</h2>
+        <p class="restricted-desc">
+            {% if is_public_assessment %}
+            To safeguard respondent privacy, individual public assessment results, names, photos, and biographies are private to the assessment creator and authorized researchers. If you performed this assessment, access it from the browser session where it was generated or unlock it with your Assessment Token below.
+            {% else %}
+            In accordance with research ethics protocols and institutional confidentiality guidelines, individual profiles in the original <strong>103-subject research baseline dataset</strong> are protected from public browsing.
+            {% endif %}
+        </p>
+
+        <div class="restricted-info-grid">
+            <div class="restricted-info-box">
+                <div class="info-icon">📊</div>
+                <div class="info-box-title">Aggregate Insights Available</div>
+                <p class="info-box-desc">
+                    Aggregate statistical distributions, Big Five trait correlations, PCA explained variance, and model evaluation metrics (MAE, R², Pearson r) across all 103 subjects are available to authorized researchers.
+                </p>
+                <a href="{{ url_for('insights') }}" class="btn btn-ghost btn-sm">Explore Model Insights →</a>
+            </div>
+
+            <div class="restricted-info-box">
+                <div class="info-icon">🔍</div>
+                <div class="info-box-title">Public Assessment Tool</div>
+                <p class="info-box-desc">
+                    You can evaluate any public figure using our public assessment tool. New assessments produce full individual profiles viewable directly in your session.
+                </p>
+                <a href="{{ url_for('analyze') }}" class="btn btn-ghost btn-sm">Start New Analysis →</a>
+            </div>
+        </div>
+
+        {% if is_public_assessment %}
+        <div class="researcher-unlock-section" style="margin-bottom:1.5rem">
+            <div class="unlock-header">
+                <span class="unlock-tag">Creator Verification</span>
+                <h3 class="unlock-title">Unlock with Assessment Access Token</h3>
+                <p class="unlock-desc">If you conducted this assessment, enter the unique token received upon completion to view your results:</p>
+            </div>
+            <form method="GET" action="{{ url_for('profile', name=name) }}" class="unlock-form-row">
+                <input type="text" name="token" class="form-input unlock-input" placeholder="Enter Assessment Access Token…" required autocomplete="off">
+                <button type="submit" class="btn btn-primary">Unlock Assessment</button>
+            </form>
+        </div>
+        {% endif %}
+
+        <div class="researcher-unlock-section">
+            <div class="unlock-header">
+                <span class="unlock-tag">Researcher Verification</span>
+                <h3 class="unlock-title">Unlock Full Profile for Researcher Maintenance</h3>
+                <p class="unlock-desc">Authorized researchers with valid administrative credentials can unlock this record below, or use the local <code>manage_research.py</code> CLI on the server.</p>
+            </div>
+            <form method="POST" action="{{ url_for('authorize_researcher') }}" class="unlock-form-row">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <input type="hidden" name="next" value="{{ request.path }}">
+                <input type="password" name="admin_key" class="form-input unlock-input" placeholder="Enter Research Admin Key…" required autocomplete="off">
+                <button type="submit" class="btn btn-primary">Unlock Profile</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="toast" class="toast hidden"></div>
+{% endblock %}

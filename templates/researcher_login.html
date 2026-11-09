@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Researcher Login — FacePersona{% endblock %}
+
+{% block content %}
+<div class="page-hero-sm">
+    <h1 class="page-title">Researcher Login</h1>
+    <p class="page-sub">Collected data, subjects, participants, and model insights are only visible to authorized researchers.</p>
+</div>
+
+<div class="researcher-login-card">
+    {% for category, message in messages %}
+    <div class="alert {% if category == 'error' %}alert-red{% else %}alert-amber{% endif %}" style="margin-bottom:1rem">
+        <div class="alert-body">{{ message }}</div>
+    </div>
+    {% endfor %}
+    <form method="POST" action="{{ url_for('authorize_researcher') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="next" value="{{ next_path }}">
+        <label class="form-label" for="adminKeyInput">Research Admin Key</label>
+        <input type="password" id="adminKeyInput" name="admin_key" class="form-input" placeholder="Enter RESEARCH_ADMIN_KEY" autocomplete="off" required autofocus>
+        <button type="submit" class="btn btn-primary btn-full" style="margin-top:1rem">🔓 Unlock Researcher View</button>
+    </form>
+    <p class="researcher-login-note">Not a researcher? <a href="{{ url_for('analyze') }}">Go to Analyze →</a></p>
+</div>
+{% endblock %}

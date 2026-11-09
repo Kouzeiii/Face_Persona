@@ -1,0 +1,71 @@
+{
+  "audit_timestamp": "2026-10-16T10:50:56.151636+00:00",
+  "summary": {
+    "total_upload_files": 109,
+    "verified_subject_images": 95,
+    "ambiguous_candidate_images": 6,
+    "orphaned_images_count": 8,
+    "unresolved_subjects_count": 8
+  },
+  "unresolved_subjects": [
+    {
+      "name": "Justin Bieber",
+      "status": "manual_review_required",
+      "candidate_images": [
+        "7851217e345d4e4abde1b8b8c0b55506.webp",
+        "950a8474f56f4998b31b544ed9cdebf0.webp"
+      ]
+    },
+    {
+      "name": "Elon Musk",
+      "status": "manual_review_required",
+      "candidate_images": [
+        "066ed13146f946e4aa16b5723840522e.webp",
+        "9956470cd9d542d99e4cd2ec4d5c4251.webp"
+      ]
+    },
+    {
+      "name": "Cong TV",
+      "status": "manual_review_required",
+      "candidate_images": [
+        "2e64127d41634986ac6f71e5e9df39a9.webp",
+        "f4197e986abf42ea9b412e4713d2e5bc.webp"
+      ]
+    },
+    {
+      "name": "Hidilyn Diaz",
+      "status": "manual_review_required",
+      "candidate_images": []
+    },
+    {
+      "name": "Roger Federer",
+      "status": "manual_review_required",
+      "candidate_images": []
+    },
+    {
+      "name": "Bill Gates",
+      "status": "manual_review_required",
+      "candidate_images": []
+    },
+    {
+      "name": "Sam Altman",
+      "status": "manual_review_required",
+      "candidate_images": []
+    },
+    {
+      "name": "Dalai Lama",
+      "status": "manual_review_required",
+      "candidate_images": []
+    }
+  ],
+  "orphaned_image_files": [
+    "149bc4dfc47a4c6eb5c097537cfe2c4e.jpg",
+    "2ed45400fc254784adf31b0640119847.jpg",
+    "5874f532f53d45a2b5f34cb233d304f8.webp",
+    "a7945cd3cf4d41b5aee9c88d4a325abe.jpg",
+    "ca967675d8fa429789a4359d0ec5ce6f.webp",
+    "d4d5a42e19234e1f94d46e13f44482a4.jpg",
+    "dd34fd08eb1e48b4a3d59b8d5daa1fe0.jpg",
+    "f3dd7ba36dbf42f5b700ff25a9f8986d.jpg"
+  ]
+}
